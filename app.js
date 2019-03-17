@@ -122,9 +122,10 @@ app.listen(port, () => {
  * @return {object} javascript object containing validation results
  * @private
  */
+
 function validateGenre(genre) {
   const schema = {
-    name: Joi.string().max(48).required()
+    name: Joi.string().min(2).max(48).required()
   };
 
   return Joi.validate(genre, schema);
