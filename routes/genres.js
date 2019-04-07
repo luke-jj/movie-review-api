@@ -10,9 +10,10 @@
  * Module dependencies.
  * @private
  */
+
 const express = require('express');
-const Joi = require('joi');
 const mongoose = require('mongoose');
+const { Genre, validate } = require('../models/genre.js');
 
 /**
  * Module variables.
@@ -27,37 +28,6 @@ const router = express.Router();
  */
 
 module.exports = router;
-
-/*
- * Data schema and model.
- */
-
-const genreSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 48
-  }
-});
-
-const Genre = mongoose.model('Genre', genreSchema);
-
-/**
- * Validate a genre object and return validation results.
- *
- * @param {object} course object, structured according to the schema variable
- * @return {object} javascript object containing validation results
- * @private
- */
-
-function validateGenre(genre) {
-  const schema = {
-    name: Joi.string().min(2).max(48).required()
-  };
-
-  return Joi.validate(genre, schema);
-}
 
 /*
  * REST API routes: `/api/genres/`
@@ -79,7 +49,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { error } = validateGenre(req.body); // Joi validation
+  const { error } = validate(req.body); // Joi validation
 
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -97,7 +67,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   // Joi validation
-  const { error } = validateGenre(req.body);
+  const { error } = validate(req.body);
 
   if (error) {
     return res.status(400).send(error.details[0].message);
