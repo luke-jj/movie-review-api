@@ -15,6 +15,7 @@ const express = require('express');
 const Joi = require('joi');
 const mongoose = require('mongoose');
 const genreRouter = require('./routes/genres');
+const customerRouter = require('./routes/customers');
 
 /**
  * App variables.
@@ -38,7 +39,7 @@ mongoose.connect('mongodb://localhost/awesomedenkivideo')
 
 app.use(express.json());
 app.use('/api/genres', genreRouter);
-
+app.use('/api/customers', customerRouter);
 
 /*
  * Event listener

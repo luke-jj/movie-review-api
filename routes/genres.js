@@ -37,7 +37,7 @@ const genreSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 50
+    maxlength: 48
   }
 });
 
@@ -72,7 +72,7 @@ router.get('/:id', async (req, res) => {
   const genre = await Genre.findById(req.params.id);
 
   if (!genre) {
-    res.status(404).send('Genre with specified id not found!');
+    res.status(404).send('Genre with specified id not found.');
   } else {
     res.send(genre);
   }
@@ -93,7 +93,6 @@ router.post('/', async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-
 });
 
 router.put('/:id', async (req, res) => {
