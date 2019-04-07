@@ -13,6 +13,7 @@
 
 const express = require('express');
 const Joi = require('joi');
+const mongoose = require('mongoose');
 const genreRouter = require('./routes/genres');
 
 /**
@@ -22,6 +23,14 @@ const genreRouter = require('./routes/genres');
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+/*
+ * Database connection.
+ */
+
+mongoose.connect('mongodb://localhost/awesomedenkivideo')
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Could not connect to MongoDB...'));
 
 /*
  * Middleware
