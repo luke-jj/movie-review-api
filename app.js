@@ -17,6 +17,7 @@ const mongoose = require('mongoose');
 const genreRouter = require('./routes/genres');
 const customerRouter = require('./routes/customers');
 const movieRouter = require('./routes/movies');
+const rentalRouter = require('./routes/rentals');
 
 /**
  * App variables.
@@ -42,6 +43,7 @@ app.use(express.json());
 app.use('/api/genres', genreRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/movies', movieRouter);
+app.use('/api/rentals', rentalRouter);
 
 /*
  * Event listener
