@@ -13,7 +13,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const { Customer, validate }= require('../models/customer.js');
+const { Customer, validate } = require('../models/customer.js');
 
 /**
  * Module variables.

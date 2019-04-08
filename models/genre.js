@@ -35,8 +35,8 @@ const Genre = mongoose.model('Genre', genreSchema);
  */
 
 module.exports.Genre = Genre;
+module.exports.genreSchema = genreSchema;
 module.exports.validate = validateGenre;
-
 
 /**
  * Validate a genre object and return validation results.
