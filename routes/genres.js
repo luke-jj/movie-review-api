@@ -55,14 +55,10 @@ router.post('/', async (req, res) => {
     return res.status(400).send(error.details[0].message);
   }
 
-  let genre = new Genre({ name: req.body.name });
+  const genre = new Genre({ name: req.body.name });
+  await genre.save();       // mongoose validation
 
-  try {
-    genre = await genre.save();       // mongoose validation
-    res.send(genre);
-  } catch (e) {
-    console.log(e);
-  }
+  res.send(genre);
 });
 
 router.put('/:id', async (req, res) => {
