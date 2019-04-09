@@ -13,12 +13,15 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('config');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi); // validate MongoDB ObjectId types
 const genreRouter = require('./routes/genres');
 const customerRouter = require('./routes/customers');
 const movieRouter = require('./routes/movies');
 const rentalRouter = require('./routes/rentals');
+const userRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 /**
  * App variables.
@@ -27,6 +30,15 @@ const rentalRouter = require('./routes/rentals');
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+/*
+ * Configuration and Settings
+ */
+
+if (!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  process.exit(1);
+}
 
 /*
  * Database connection.
@@ -45,6 +57,8 @@ app.use('/api/genres', genreRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/movies', movieRouter);
 app.use('/api/rentals', rentalRouter);
+app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
 
 /*
  * Event listener

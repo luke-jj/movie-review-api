@@ -1,4 +1,5 @@
 # Movie Rental Service API
+The Video Rental Software implementing this api runs locally in a video store.
 
 ## Installation
 
@@ -25,11 +26,11 @@
     POST    /api/rentals
     GET     /api/rentals
 
-
-Mongoose validates the persistence model and Joi validates the user input model.
-
-
+    POST    /api/users
+    POST    /api/auth
 
 
 ## Data Model
-isGold may be used to calculate the rental fee
+Mongoose validates the persistence model and Joi validates the user input model.
+isGold may be used to calculate the rental fee.
+
