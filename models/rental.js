@@ -11,8 +11,8 @@
  * @private
  */
 
-const Joi = require('joi');
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 /*
  * Data schema and model.
@@ -88,8 +88,8 @@ module.exports.validate = validateRental;
 
 function validateRental(rental) {
   const schema = {
-    customerId: Joi.string().required(),
-    movieId: Joi.string().required()
+    customerId: Joi.objectId().required(),
+    movieId: Joi.objectId().required()
   };
 
   return Joi.validate(rental, schema);

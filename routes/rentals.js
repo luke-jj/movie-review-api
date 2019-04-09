@@ -13,6 +13,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const Fawn = require('fawn');
 const { Rental, validate } = require('../models/rental.js');
 const { Movie } = require('../models/movie.js');
 const { Customer } = require('../models/customer.js');
@@ -35,6 +36,8 @@ module.exports = router;
  * REST API routes: `/api/movies/`
  */
 
+Fawn.init(mongoose);
+
 router.get('/', async (req, res) => {
   const rentals = await Rental.find().sort('-dateOut');
   res.send(rentals);
@@ -53,7 +56,7 @@ router.post('/', async (req, res) => {
   if (movie.numberInStock === 0)
     return res.status(400).send('Movie not in stock');
 
-  let rental = new Rental({
+  const rental = new Rental({
     customer: {
       _id: customer._id,
       name: customer.name,
@@ -65,10 +68,15 @@ router.post('/', async (req, res) => {
       dailyRentalRate: movie.dailyRentalRate
     }
   });
-  rental = await rental.save();
 
-  movie.numberInStock -= 1;
-  movie.save();
+  try {
+    new Fawn.Task()
+      .save('rentals', rental)
+      .update('movies', { _id: movie._id }, { $inc: { numberInStock: -1 } })
+      .run();
 
-  res.send(rental);
+    res.send(rental);
+  } catch (e) {
+    res.status(500).send('Transaction failed.');
+  }
 });

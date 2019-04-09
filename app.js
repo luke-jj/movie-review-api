@@ -12,8 +12,9 @@
  */
 
 const express = require('express');
-const Joi = require('joi');
 const mongoose = require('mongoose');
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi); // validate MongoDB ObjectId types
 const genreRouter = require('./routes/genres');
 const customerRouter = require('./routes/customers');
 const movieRouter = require('./routes/movies');
