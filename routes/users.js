@@ -1,6 +1,3 @@
-// Register: POST /api/users {name, email, password}
-// Login: POST /api/logins
-
 /*
  * Movie Rental Service
  * Copyright (c) 2019 Luca J
@@ -19,6 +16,8 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const { User, validate } = require('../models/user.js');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 /**
  * Module variables.
@@ -36,10 +35,10 @@ module.exports = router;
 
 /*
  * REST API routes: `/api/movies`
- * Register a new user.
+ * Register a new user / get current user details
  */
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -49,7 +48,7 @@ router.post('/', async (req, res) => {
   user = new User({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password   // do not send the password back to the client
+    password: req.body.password // do not send the password back to the client
   });
 
   const salt = await bcrypt.genSalt(10);
@@ -63,3 +62,10 @@ router.post('/', async (req, res) => {
     .header('x-auth-token', token)
     .send(_.pick(user, ['_id', 'name', 'email']));
 });
+
+router.get('/me', auth, async (req, res) => {
+  // user._id is added to the request by the auth middleware
+  const user = await User.findById(req.user._id).select('-password');
+  res.send(user);
+});
+

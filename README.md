@@ -27,6 +27,7 @@ locally in a video store outlet. Users are expected to be clerks.
     POST    /api/rentals
     GET     /api/rentals
 
+    GET     /api/users/me
     POST    /api/users
     POST    /api/auth
 
