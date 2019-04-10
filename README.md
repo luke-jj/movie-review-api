@@ -1,5 +1,6 @@
 # Movie Rental Service API
-The Video Rental Software implementing this api runs locally in a video store.
+The Video Rental Client Software implementing this api are expected to be run
+locally in a video store outlet. Users are expected to be clerks.
 
 ## Installation
 
@@ -30,7 +31,16 @@ The Video Rental Software implementing this api runs locally in a video store.
     POST    /api/auth
 
 
+
+
+## Authentication
+Users can not be logged out using the api, as json web tokens are not saved on
+the server. The logout feature has to be implemented in the client application.
+
+on login or registration a json webtoken is sent to the client as a value to the
+header `x-auth-token`. This token has to be sent with future api calls to
+authorize usage of endpoints.
+
 ## Data Model
 Mongoose validates the persistence model and Joi validates the user input model.
-isGold may be used to calculate the rental fee.
-
+`isGold` property may be used to calculate the rental fee.
