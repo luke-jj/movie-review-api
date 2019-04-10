@@ -61,7 +61,7 @@ app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 
 /*
- * Event listener
+ * HTTP Request Listener
  */
 
 app.listen(port, () => {
