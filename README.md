@@ -4,7 +4,14 @@ locally in a video store outlet. Users are expected to be clerks.
 
 ## Installation
 
-## API Documentation
+The environment variable `denki_jwtPrivateKey` has to be set to a secure key.
+`denki_mongoDb` has to be set to the ip address of the database server.
+
+    Examples:
+    export denki_jwtPrivateKey=du3hf94j$jd0#jsf.s
+    export denki_mongoDb=localhost
+
+## API Documentation: Endpoints
 
     POST    /api/customers
     GET     /api/customers
@@ -32,15 +39,14 @@ locally in a video store outlet. Users are expected to be clerks.
     POST    /api/auth
 
 
-
-
-## Authentication
+## Authentication & Authorization
 Users can not be logged out using the api, as json web tokens are not saved on
-the server. The logout feature has to be implemented in the client application.
+the server. The logout feature has to be implemented in the client application
+by deleting the webtoken from local storage.
 
-on login or registration a json webtoken is sent to the client as a value to the
-header `x-auth-token`. This token has to be sent with future api calls to
-authorize usage of endpoints.
+On login or registration a json webtoken is sent to the client as a value of the
+header `x-auth-token`. This header and token value has to be sent with future
+api calls to authorize usage of some endpoints.
 
 ## Data Model
 Mongoose validates the persistence model and Joi validates the user input model.
