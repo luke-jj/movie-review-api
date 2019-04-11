@@ -19,5 +19,9 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "mongoose": "^5.4.22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luke-jj/movie-rental-service.git"
   }
 }
