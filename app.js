@@ -29,6 +29,7 @@ const authRouter = require('./routes/auth');
  */
 
 const port = process.env.PORT || 3000;
+const mongodb = config.get('mongodb');
 const app = express();
 
 /*
@@ -44,7 +45,7 @@ if (!config.get('jwtPrivateKey')) {
  * Database connection.
  */
 
-mongoose.connect('mongodb://localhost/awesomedenkivideo')
+mongoose.connect(`mongodb://${mongodb}/awesomedenkivideo`)
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...'));
 

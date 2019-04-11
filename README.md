@@ -1,15 +1,35 @@
 # Movie Rental Service API
-The Video Rental Client Software implementing this api are expected to be run
-locally in a video store outlet. Users are expected to be clerks.
+The Video Rental Client Software implementing calls to this api are expected to
+be run locally in a video store outlet. Users are expected to be employees.
+
+## Requirements
+This API requires [Node.js](https://nodejs.org/en/) version v11.0.0 or later,
+and the [npm packet manager](https://npmjs.com) version 6.9.0 or later.
 
 ## Installation
+Download and install the above listed requirements.
+After node and npm have been installed run `npm install` in the project
+directory to download and install all necessary third party dependencies.
+Double check the results and consult the `package.json` configuration file to
+make sure all dependencies have been installed correctly.
+
+This API uses a [MongoDB](https://www.mongodb.com/download-center/community)
+database server. You can download, install and run a MongoDB database locally or
+use an online provider. Make sure to set the `denki_mongoDb` environment
+variable to the ip address of the database server.
 
 The environment variable `denki_jwtPrivateKey` has to be set to a secure key.
-`denki_mongoDb` has to be set to the ip address of the database server.
+The secure key has to be 'long and random' and may use any common alphabetic
+characters, numbers, and special symbols. The same recommendations that apply
+for ['strong passwords'](https://www.grc.com/passwords.htm) apply for the
+json webtoken key.
 
     Examples:
     export denki_jwtPrivateKey=du3hf94j$jd0#jsf.s
     export denki_mongoDb=localhost
+
+Run the npm task: `npm start` in the console in the project folder to start the
+web app.
 
 ## API Documentation: Endpoints
 
@@ -51,3 +71,4 @@ api calls to authorize usage of some endpoints.
 ## Data Model
 Mongoose validates the persistence model and Joi validates the user input model.
 `isGold` property may be used to calculate the rental fee.
+

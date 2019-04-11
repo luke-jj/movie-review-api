@@ -1,3 +1,4 @@
 {
-    "jwtPrivatKey": ""
+    "jwtPrivatKey": "",
+    "mongodb": "localhost"
 }
