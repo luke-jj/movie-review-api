@@ -35,7 +35,7 @@ module.exports = router;
  * REST API routes: `/api/genres/`
  */
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const genres = await Genre.find().sort('name'); // { name: 1 }
   res.send(genres);
 });

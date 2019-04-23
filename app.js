@@ -11,6 +11,7 @@
  * @private
  */
 
+require('express-async-errors');
 const express = require('express');
 const mongoose = require('mongoose');
 const config = require('config');
@@ -22,6 +23,7 @@ const movieRouter = require('./routes/movies');
 const rentalRouter = require('./routes/rentals');
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const error = require('./middleware/error');
 
 /**
  * App variables.
@@ -37,7 +39,7 @@ const app = express();
  */
 
 if (!config.get('jwtPrivateKey')) {
-  console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  console.error('FATAL ERROR: denki_jwtPrivateKey environment variable not set.');
   process.exit(1);
 }
 
@@ -60,6 +62,7 @@ app.use('/api/movies', movieRouter);
 app.use('/api/rentals', rentalRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
+app.use(error); // error handling function
 
 /*
  * HTTP Request Listener
