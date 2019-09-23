@@ -1,4 +1,4 @@
 {
-    "jwtPrivateKey": "denki_jwtPrivateKey",
-    "mongodb": "denki_mongoDb"
+    "jwtPrivateKey": "vidly_jwtPrivateKey",
+    "db": "vidly_db"
 }

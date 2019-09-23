@@ -54,8 +54,11 @@ web app.
     POST    /api/rentals
     GET     /api/rentals
 
+    POST    /api/returns
+
     GET     /api/users/me
     POST    /api/users
+
     POST    /api/auth
 
 

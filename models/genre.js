@@ -1,56 +1,25 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-/*
- * Data schema and model.
- */
-
-const genreSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 48
+    minlength: 5,
+    maxlength: 50
   }
 });
 
-const Genre = mongoose.model('Genre', genreSchema);
-
-/**
- * Module exports.
- * @private
- */
+const Genre = mongoose.model('genres', schema);
 
 module.exports.Genre = Genre;
-module.exports.genreSchema = genreSchema;
+module.exports.genreSchema = schema;
 module.exports.validate = validateGenre;
 
-/**
- * Validate a genre object and return validation results.
- *
- * @param {object} course object, structured according to the schema variable
- * @return {object} javascript object containing validation results
- * @private
- */
-
-function validateGenre(genre) {
+function validateGenre(body) {
   const schema = {
-    name: Joi.string().min(2).max(48).required()
+    name: Joi.string().min(5).max(50).required()
   };
 
-  return Joi.validate(genre, schema);
+  return Joi.validate(body, schema);
 }
-

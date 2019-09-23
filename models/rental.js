@@ -1,22 +1,6 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
-const mongoose = require('mongoose');
 const Joi = require('joi');
-
-/*
- * Data schema and model.
- */
+const mongoose = require('mongoose');
+const moment = require('moment');
 
 const rentalSchema = new mongoose.Schema({
   customer: {
@@ -24,7 +8,7 @@ const rentalSchema = new mongoose.Schema({
       name: {
         type: String,
         required: true,
-        minlength: 2,
+        minlength: 5,
         maxlength: 50
       },
       isGold: {
@@ -34,7 +18,7 @@ const rentalSchema = new mongoose.Schema({
       phone: {
         type: String,
         required: true,
-        minlength: 2,
+        minlength: 5,
         maxlength: 50
       }
     }),
@@ -46,7 +30,7 @@ const rentalSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 2,
+        minlength: 5,
         maxlength: 255
       },
       dailyRentalRate: {
@@ -72,19 +56,21 @@ const rentalSchema = new mongoose.Schema({
   }
 });
 
+rentalSchema.statics.lookup = function(customerId, movieId) {
+  return this.findOne({
+    'customer._id': customerId,
+    'movie._id': movieId
+  });
+};
+
+rentalSchema.methods.return = function() {
+  this.dateReturned = new Date();
+
+  const rentalDays = moment().diff(this.dateOut, 'days');
+  this.rentalFee = rentalDays * this.movie.dailyRentalRate;
+};
+
 const Rental = mongoose.model('Rental', rentalSchema);
-
-/**
- * Module exports.
- * @private
- */
-
-module.exports.Rental = Rental;
-module.exports.validate = validateRental;
-
-/**
- *
- */
 
 function validateRental(rental) {
   const schema = {
@@ -94,3 +80,6 @@ function validateRental(rental) {
 
   return Joi.validate(rental, schema);
 }
+
+exports.Rental = Rental;
+exports.validate = validateRental;

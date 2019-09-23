@@ -1,58 +1,32 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
 const express = require('express');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const { User, validate } = require('../models/user.js');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const { User, validate } = require('../models/user');
 const auth = require('../middleware/auth');
-const admin = require('../middleware/admin');
-
-/**
- * Module variables.
- * @private
- */
 
 const router = express.Router();
 
-/**
- * Module exports.
- * @private
- */
-
 module.exports = router;
 
-/*
- * REST API routes: `/api/movies`
- * Register a new user / get current user details
- */
-
-router.post('/', [auth, admin], async (req, res) => {
+router.post('/', async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
 
-  let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send('User already registered.');
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
 
-  user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password // do not send the password back to the client
-  });
+  const userExists = await User.findOne({ email: req.body.email });
 
-  const salt = await bcrypt.genSalt(10);
-  user.password = await bcrypt.hash(user.password, salt);
+  if (userExists) {
+    return res.status(400).send('User already registered.');
+  }
+
+  const user = new User(_.pick(req.body, ['name', 'email', 'password']));
+  const salt = await generateSalt(10);
+  user.password = await hash(user.password, salt);
 
   await user.save();
 
@@ -64,8 +38,17 @@ router.post('/', [auth, admin], async (req, res) => {
 });
 
 router.get('/me', auth, async (req, res) => {
-  // user._id is added to the request by the auth middleware
-  const user = await User.findById(req.user._id).select('-password');
+  const user = await User
+    .findById(req.user._id)
+    .select('-password');
+
   res.send(user);
 });
 
+async function generateSalt(runs) {
+  return await bcrypt.genSalt(runs);
+}
+
+async function hash(hash, salt) {
+  return await bcrypt.hash(hash, salt);
+}
