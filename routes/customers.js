@@ -1,12 +1,38 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
-
 const { Customer, validate } = require('../models/customer');
 const auth = require('../middleware/auth');
 
+/**
+ * Module variables.
+ * @private
+ */
+
 const router = express.Router();
 
+/**
+ * Module exports.
+ * @private
+ */
+
 module.exports = router;
+
+/*
+ * REST API routes: `/api/customers/`
+ */
 
 router.get('/', async (req, res) => {
   const customers = await Customer.find();

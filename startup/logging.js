@@ -1,6 +1,26 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
 const winston = require('winston');
 // require('winston-mongodb');
 require('express-async-errors');
+
+/**
+ * Module exports.
+ *
+ * Set up and configure logging functionality.
+ * @private
+ */
 
 module.exports = function() {
 

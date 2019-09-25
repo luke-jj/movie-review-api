@@ -1,7 +1,24 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+
+/*
+ * Data schema and model.
+ */
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -37,8 +54,21 @@ userSchema.methods.generateAuthToken = function() {
 
 const User = mongoose.model('User', userSchema);
 
+/**
+ * Module exports.
+ * @private
+ */
+
 exports.User = User;
 exports.validate = validateUser;
+
+/**
+ * Validate a user object and return the validation results.
+ *
+ * @param {object} user object, structured according to the schema variable
+ * @return {object} javascript object containing validation results
+ * @private
+ */
 
 function validateUser(body) {
   const schema = {

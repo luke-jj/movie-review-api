@@ -1,6 +1,23 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
 const Joi = require('joi');
 const mongoose = require('mongoose');
 const moment = require('moment');
+
+/*
+ * Data schema and model.
+ */
 
 const rentalSchema = new mongoose.Schema({
   customer: {
@@ -72,6 +89,21 @@ rentalSchema.methods.return = function() {
 
 const Rental = mongoose.model('Rental', rentalSchema);
 
+/**
+ * Module exports.
+ * @private
+ */
+
+exports.Rental = Rental;
+exports.validate = validateRental;
+
+/**
+ * Validate a rental request object and return validation results.
+ *
+ * @param {object} rental request object.
+ * @return {object} javascript object containing validation results
+ * @private
+ */
 function validateRental(rental) {
   const schema = {
     customerId: Joi.objectId().required(),
@@ -81,5 +113,3 @@ function validateRental(rental) {
   return Joi.validate(rental, schema);
 }
 
-exports.Rental = Rental;
-exports.validate = validateRental;

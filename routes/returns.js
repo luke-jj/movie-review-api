@@ -1,10 +1,41 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
 const Joi = require('joi');
 const validate = require('../middleware/validate');
 const {Rental} = require('../models/rental');
 const {Movie} = require('../models/movie');
 const auth = require('../middleware/auth');
 const express = require('express');
+
+/**
+ * Module variables.
+ * @private
+ */
+
 const router = express.Router();
+
+/**
+ * Module exports.
+ * @private
+ */
+
+module.exports = router;
+
+/*
+ * REST API route: `/api/returns/`
+ * Return a movie.
+ */
 
 router.post('/', [auth, validate(validateReturn)], async (req, res) => {
   const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
@@ -23,6 +54,14 @@ router.post('/', [auth, validate(validateReturn)], async (req, res) => {
   return res.send(rental);
 });
 
+/**
+ * Validate a returns request object and return validation results.
+ *
+ * @param {object} returns request object
+ * @return {object} javascript object containing validation results
+ * @private
+ */
+
 function validateReturn(req) {
   const schema = {
     customerId: Joi.objectId().required(),
@@ -32,4 +71,3 @@ function validateReturn(req) {
   return Joi.validate(req, schema);
 }
 
-module.exports = router;
