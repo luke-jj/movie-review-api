@@ -15,18 +15,18 @@ make sure all dependencies have been installed correctly.
 
 This API uses a [MongoDB](https://www.mongodb.com/download-center/community)
 database server. You can download, install and run a MongoDB database locally or
-use an online provider. Make sure to set the `denki_mongoDb` environment
+use an online provider. Make sure to set the `video_db` environment
 variable to the ip address of the database server.
 
-The environment variable `denki_jwtPrivateKey` has to be set to a secure key.
+The environment variable `video_jwtprivatekey` has to be set to a secure key.
 The secure key has to be 'long and random' and may use any common alphabetic
 characters, numbers, and special symbols. The same recommendations that apply
 for ['strong passwords'](https://www.grc.com/passwords.htm) apply for the
 json webtoken key.
 
-    Examples:
-    export denki_jwtPrivateKey=du3hf94j$jd0#jsf.s
-    export denki_mongoDb=localhost
+    export NODE_ENV=production
+    export video_jwtPrivateKey=du3hf94j$jd0#jsf.s
+    export video_db=mongo+ssdf@asd.com/test?sdf
 
 Run the npm task: `npm start` in the console in the project folder to start the
 web app.
