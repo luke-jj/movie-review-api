@@ -19,6 +19,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { User, validate } = require('../models/user');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 /**
  * Module variables.
