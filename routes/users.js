@@ -39,7 +39,7 @@ module.exports = router;
  * Register a new user / get current user details
  */
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) {
