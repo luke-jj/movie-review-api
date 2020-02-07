@@ -16,11 +16,11 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 /**
- * Connect to the database using the connection string read from a environment
- * variable.
+ * Read connection string from config var, connect to db.
  */
+
 module.exports = function() {
   const db = config.get('db');
   mongoose.connect(db)
-    .then(() => winston.info(`Connected to ${db}...`));;
-}
+    .then(() => winston.info(`Connected to ${db}...`));
+};
