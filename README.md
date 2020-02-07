@@ -1,15 +1,9 @@
-# Movie Rental Service API
-The Video Rental Client Software implementing calls to this api are expected to
-be run locally in a video store outlet. Users are expected to be employees.
-
-## Todo
-- eliminate fawn dependency
-- fix readme (copy from web)
-- [ ] test new build
+# Movie Review And Rental Service API
 
 ## Requirements
-This API requires [Node.js](https://nodejs.org/en/) version v11.0.0 or later,
-and the [npm packet manager](https://npmjs.com) version 6.9.0 or later.
+- [Node.js](https://nodejs.org/en/) version v12.15.0 or later,
+- [NPM packet manager](https://npmjs.com) version 6.9.0 or later.
+- [MongoDB Server](https://www.mongodb.com/download-center/community)
 
 ## Installation
 Download and install the above listed requirements.
@@ -21,7 +15,7 @@ make sure all dependencies have been installed correctly.
 This API uses a [MongoDB](https://www.mongodb.com/download-center/community)
 database server. You can download, install and run a MongoDB database locally or
 use an online provider. Make sure to set the `video_db` environment
-variable to the ip address of the database server.
+variable to the connection string of the MongoDB server you are using.
 
 The environment variable `video_jwtprivatekey` has to be set to a secure key.
 The secure key has to be 'long and random' and may use any common alphabetic
@@ -29,12 +23,27 @@ characters, numbers, and special symbols. The same recommendations that apply
 for ['strong passwords'](https://www.grc.com/passwords.htm) apply for the
 json webtoken key.
 
+Before starting the application ensure that you have set the necessary
+environment variables and your MongoDB server is up:
+
     export NODE_ENV=production
     export video_jwtPrivateKey=du3hf94j$jd0#jsf.s
-    export video_db=mongo+ssdf@asd.com/test?sdf
+    export video_db=mongodb://mongodb0.example.com:27017/movies?sdf
 
-Run the npm task: `npm start` in the console in the project folder to start the
-web app.
+
+### Populate the Database
+
+    node services/seed.js
+
+### Run the Tests
+
+    npm test
+
+All tests should pass.
+
+### Start The Application
+
+Run `npm start` from the project root folder to start the REST API.
 
 ## API Documentation: Endpoints
 
@@ -56,27 +65,19 @@ web app.
     PUT     /api/movies/{id}
     DELETE  /api/movies/{id}
 
-    POST    /api/rentals
+    POST    /api/rentals            create a rental / rent a movie
     GET     /api/rentals
 
-    POST    /api/returns
+    POST    /api/returns            delete a rental / return a rental
 
-    GET     /api/users/me
-    POST    /api/users
+    POST    /api/users              create new user
+    GET     /api/users/me           get current user details
 
-    POST    /api/auth
+    POST    /api/auth               login / create JSON web token
 
 
-## Authentication & Authorization
-Users can not be logged out using the api, as json web tokens are not saved on
-the server. The logout feature has to be implemented in the client application
-by deleting the webtoken from local storage.
-
-On login or registration a json webtoken is sent to the client as a value of the
-header `x-auth-token`. This header and token value has to be sent with future
-api calls to authorize usage of some endpoints.
-
-## Data Model
-Mongoose validates the persistence model and Joi validates the user input model.
-`isGold` property may be used to calculate the rental fee.
+## Headers
+On login or registration a json webtoken is sent to the client as a value of
+the header `x-auth-token`. This header and token value has to be sent with
+future api calls to authorize usage of some endpoints.
 

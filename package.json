@@ -2,13 +2,13 @@
   "name": "video_review_rental_service",
   "version": "0.2.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/app.js",
     "test": "jest --watchAll --verbose --runInBand --coverage"
   },
   "engines": {
-    "node": "10.16.0"
+    "node": "12.15.0"
   },
   "keywords": [],
   "author": "",
