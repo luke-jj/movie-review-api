@@ -36,7 +36,7 @@ module.exports = router;
  * REST API routes: `/api/genres/`
  */
 
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) {
@@ -67,7 +67,7 @@ router.get('/:id', validateObjectId, async (req, res) => {
   res.send(genre);
 });
 
-router.put('/:id', auth, validateObjectId, async (req, res) => {
+router.put('/:id', [auth, admin, validateObjectId], async (req, res) => {
   const { error } = validate(req.body);
 
   if (error) {

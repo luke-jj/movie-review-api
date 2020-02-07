@@ -34,12 +34,12 @@ module.exports = router;
  * REST API routes: `/api/customers/`
  */
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const customers = await Customer.find();
   res.send(customers);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   const customer = await Customer.findById(req.params.id);
 
   if (!customer) {

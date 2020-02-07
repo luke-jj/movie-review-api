@@ -2,6 +2,11 @@
 The Video Rental Client Software implementing calls to this api are expected to
 be run locally in a video store outlet. Users are expected to be employees.
 
+## Todo
+- eliminate fawn dependency
+- fix readme (copy from web)
+- [ ] test new build
+
 ## Requirements
 This API requires [Node.js](https://nodejs.org/en/) version v11.0.0 or later,
 and the [npm packet manager](https://npmjs.com) version 6.9.0 or later.

@@ -7,7 +7,7 @@
 'use strict';
 
 /**
- * App dependencies.
+ * Module dependencies.
  * @private
  */
 
@@ -15,7 +15,7 @@ const express = require('express');
 const winston = require('winston');
 
 /**
- * App variables.
+ * Module variables.
  * @private
  */
 
@@ -29,10 +29,10 @@ const port = process.env.PORT || 3000;
 
 require('./startup/logging')();
 require('./startup/config')();
+require('./startup/middleware')(app);
 require('./startup/routes')(app);
 require('./startup/db')();
 require('./startup/validation')();
-require('./startup/prod')(app);
 
 const server = app.listen(port, () => {
   winston.info(`Listening on port ${port}`);

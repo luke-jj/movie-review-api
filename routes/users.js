@@ -63,6 +63,7 @@ router.post('/', [auth, admin], async (req, res) => {
 
   res
     .header('x-auth-token', token)
+    .header("access-control-expose-headers", "x-auth-token")
     .send(_.pick(user, ['_id', 'name', 'email']));
 });
 
@@ -86,10 +87,10 @@ async function generateSalt(runs) {
 }
 
 /**
- * Hash a password with bcrypt using salt and return the hash.
+ * Hash a password using salt and return the hash.
  *
  * @param {string} pass - A client provided password.
- * @param {string} salt - A salt generated with bcrypt.
+ * @param {string} salt - hash salt.
  * @return {string} hashed password.
  * @private
  */

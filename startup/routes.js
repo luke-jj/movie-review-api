@@ -20,7 +20,6 @@ const genres = require('../routes/genres.js');
 const returns = require('../routes/returns');
 const auth = require('../routes/auth.js');
 const error = require('../middleware/error');
-const cors = require('cors');
 
 /**
  * Module exports.
@@ -30,7 +29,6 @@ const cors = require('cors');
  */
 
 module.exports = function(app) {
-  app.use(cors());
   app.use(express.json());
   app.use('/api/genres', genres);
   app.use('/api/customers', customers);
