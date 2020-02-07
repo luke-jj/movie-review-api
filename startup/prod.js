@@ -20,7 +20,7 @@ const cors = require('cors');
  */
 
 module.exports = function(app) {
-  app.use(helmet());
   app.use(cors());
+  app.use(helmet());
   app.use(compression());
 };
