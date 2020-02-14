@@ -1,82 +1,97 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
-const mongoose = require('mongoose');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const config = require('../../config');
 
-/*
- * Data schema and model.
- */
-
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50
-  },
-  email: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 255,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 1024
-  },
-  isAdmin: {
-    type: Boolean
+const users = [
+  {
+    id: 2,
+    email: 'charlie@chaplin.com',
+    name: 'Charlie',
+    password: '$2b$10$6.sAx7UAILobqlDOGLZOdOcUUMS8RLpCRv0oCWdD3E.aUMF2Ww1sC',
+    isAdmin: true
   }
-});
+];
 
-userSchema.methods.generateAuthToken = function() {
+module.exports = {
+  generateAuthToken,
+  validate,
+  users: {
+    getUsers,
+    getUserById,
+    getUserByEmail,
+    createUser,
+    updateUser,
+    deleteUser
+  }
+};
+
+function generateAuthToken(user) {
   return jwt.sign({
-    _id: this._id,
-    name: this.name,
-    isAdmin: this.isAdmin
-  }, config.get('jwtPrivateKey'));
+    id: user.id,
+    name: user.name,
+    isAdmin: user.isAdmin
+  }, config.JWTPRIVATEKEY);
 }
 
-const User = mongoose.model('User', userSchema);
+function getUsers() {
+  return users.map(user => { return { ...user }; });
+}
 
-/**
- * Module exports.
- * @private
- */
+function getUserById(id) {
+  const user = users.find(user => user.id === id);
 
-exports.User = User;
-exports.validate = validateUser;
+  if (!user) return null;
 
-/**
- * Validate a user object and return the validation results.
- *
- * @param {object} user object, structured according to the schema variable
- * @return {object} javascript object containing validation results
- * @private
- */
+  return { ...user };
+}
 
-function validateUser(body) {
-  const schema = {
-    name: Joi.string().min(5).max(50).required(),
-    email: Joi.string().min(5).max(255).email().required(),
-    password: Joi.string().min(5).max(1024).required()
-  };
+function getUserByEmail(email) {
+  const user = users.find(user => user.email === email);
 
-  return Joi.validate(body, schema);
+  if (!user) return null;
+
+  return { ...user };
+}
+
+function createUser(user) {
+  const newUser = {
+    id: users.length + 1,
+    ...user
+  }
+
+  users.push(newUser);
+
+  return { ...newUser };
+}
+
+function updateUser(id, user) {
+  const userInDb = getUserById(id);
+
+  if (!userInDb) return null;
+
+  for (let key of Object.keys(user)) {
+    userInDb[key] = user[key];
+  }
+
+  return { ...userInDb };
+}
+
+function deleteUser(id) {
+  const user = users.find(user => user.id === id);
+
+  if (!user) return null;
+
+  const index = users.indexOf(user);
+  users.splice(index, 1);
+
+  return user;
+}
+
+function validate(body) {
+  return Joi.object({
+    email: Joi.string().email().required(),
+    name: Joi.string().min(3).required(),
+    password: Joi.string().min(8).required(),
+    isAdmin: Joi.boolean()
+  }).validate(body);
 }

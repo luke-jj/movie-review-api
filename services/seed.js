@@ -2,8 +2,8 @@
  * Seed Data for MongoDB.
  */
 
-const config = require("config");
 const mongoose = require("mongoose");
+const config = require('../config');
 const { Genre } = require("../src/models/genre");
 const { Movie } = require("../src/models/movie");
 
@@ -43,7 +43,11 @@ const data = [
 ];
 
 async function seed() {
-  await mongoose.connect(config.get("db"));
+  if (!config.DATABASE) {
+    throw new Error('DATABASE_API must be set!');
+  }
+
+  await mongoose.connect(config.DATABASE);
 
   await Movie.deleteMany({});
   await Genre.deleteMany({});

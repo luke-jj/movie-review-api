@@ -1,25 +1,9 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
 const winston = require('winston');
 
-/**
- * Module exports.
- * @private
- */
+module.exports = (err, req, res, next) => {
+  // Log the error
+  winston.log('error', err.message, err);
 
-module.exports = function(err, req, res, next) {
-  winston.error(err.message, err);
-
-  res.status(500).send('Something failed.');
-}
+  // Send user friendly message
+  res.status(500).send('An unexpected error occured on the server');
+};

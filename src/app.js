@@ -1,46 +1,15 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
 const express = require('express');
-const winston = require('winston');
-
-/**
- * Module variables.
- * @private
- */
+require('express-async-errors');
+const config = require('../config');
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-/**
- * App startup.
- * @private
- */
+const port = config.PORT;
 
 require('./startup/logging')();
 require('./startup/config')();
 require('./startup/middleware')(app);
 require('./startup/routes')(app);
-require('./startup/db')();
-require('./startup/validation')();
 
-const server = app.listen(port, () => {
-  winston.info(`Listening on port ${port}`);
-});
+throw new Error('new error thrown.');
 
-/**
- * Module exports.
- * @private
- */
-
-module.exports = server;
+app.listen(port, () => console.log(`Listening on port ${port}...`));

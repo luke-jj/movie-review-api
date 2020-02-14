@@ -1,100 +1,83 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
 const express = require('express');
-const mongoose = require('mongoose');
-const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const { User, validate } = require('../models/user');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-
-/**
- * Module variables.
- * @private
- */
+const validate = require('../middleware/validation');
+const { users, generateAuthToken, validate: validateUser } = require('../models/user');
 
 const router = express.Router();
 
-/**
- * Module exports.
- * @private
- */
-
 module.exports = router;
 
-/*
- * REST API routes: `/api/movies`
- * Register a new user / get current user details
- */
+router.use(auth, admin);
+router.get('/', handleGet);
+router.get('/:id', handleGetById);
+router.post('/', validate(validateUser), handleCreate);
+router.put('/:id', validate(validateUser), handleUpdate);
+router.delete('/:id', handleDelete);
 
-router.post('/', [auth, admin], async (req, res) => {
-  const { error } = validate(req.body);
-
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  const userExists = await User.findOne({ email: req.body.email });
-
-  if (userExists) {
-    return res.status(400).send('User already registered.');
-  }
-
-  const user = new User(_.pick(req.body, ['name', 'email', 'password']));
-  const salt = await generateSalt(10);
-  user.password = await hash(user.password, salt);
-
-  await user.save();
-
-  const token = user.generateAuthToken();
-
-  res
-    .header('x-auth-token', token)
-    .header("access-control-expose-headers", "x-auth-token")
-    .send(_.pick(user, ['_id', 'name', 'email']));
-});
-
-router.get('/me', auth, async (req, res) => {
-  const user = await User
-    .findById(req.user._id)
-    .select('-password');
-
-  res.send(user);
-});
-
-/**
- * Generate a salt with bcrypt.
- *
- * @return {string} salt.
- * @private
- */
-
-async function generateSalt(runs) {
-  return await bcrypt.genSalt(runs);
+function handleGet(req, res) {
+  const usersInDb = users.getUsers();
+  usersInDb.forEach(user => delete user.password);
+  res.json(usersInDb);
 }
 
-/**
- * Hash a password using salt and return the hash.
- *
- * @param {string} pass - A client provided password.
- * @param {string} salt - hash salt.
- * @return {string} hashed password.
- * @private
- */
+function handleGetById(req, res) {
+  const user = users.getUserById(parseInt(req.params.id));
 
-async function hash(hash, salt) {
-  return await bcrypt.hash(hash, salt);
+  if (!user) {
+    return res.status(404).send('User with given id not found.');
+  }
+
+  delete user.password;
+  res.json(user);
+}
+
+async function handleCreate(req, res) {
+  const userInDb = users.getUserByEmail(req.body.email);
+
+  if (userInDb) {
+    return res.status(400).send('Email already in use.');
+  }
+
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+  const user = users.createUser({
+    email: req.body.email,
+    name: req.body.name,
+    isAdmin: req.body.isAdmin,
+    password: hashedPassword
+  });
+
+  delete user.password;
+  const token = generateAuthToken(user);
+  res.header('x-auth-token', token).json(user);
+}
+
+async function handleUpdate(req, res) {
+  const user = { ...req.body };
+
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+
+  const updatedUser = users.updateUser(parseInt(req.params.id), user);
+
+  if (!updatedUser) {
+    return res.status(404).send('User with given id not found.');
+  }
+
+  delete updatedUser.password;
+  res.json(updatedUser);
+}
+
+function handleDelete(req, res) {
+  const user = users.deleteUser(parseInt(req.params.id));
+
+  if (!user) {
+    return res.status(404).send('User with given id not found.');
+  }
+
+  delete user.password;
+  res.json(user);
 }

@@ -1,104 +1,58 @@
-/*
- * Movie Rental Service
- * Copyright (c) 2019 Luca J
- * Licensed under the MIT license.
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- * @private
- */
-
-const mongoose = require('mongoose');
 const express = require('express');
-const { Movie, validate } = require('../models/movie');
-const { Genre } = require('../models/genre');
 const auth = require('../middleware/auth');
-const admin = require('../middleware/admin');
-const validateObjectId = require("../middleware/validateObjectId");
-
-/**
- * Module variables.
- * @private
- */
+const validate = require('../middleware/validation');
+const { movies, validate: validateMovie } = require('../models/movie');
 
 const router = express.Router();
 
-/**
- * Module exports.
- * @private
- */
+router.get('/', handleGet);
+router.get('/:id', handleGetById);
+router.post('/', [auth, validate(validateMovie)], handleCreate);
+router.put('/:id', [auth, validate(validateMovie)], handleUpdate);
+router.delete('/:id', auth, handleDelete);
 
 module.exports = router;
 
-/*
- * REST API routes: `/api/movies/`
- */
+function handleGet(req, res) {
+  res.json(movies.getMovies());
+}
 
-router.get('/', async (req, res) => {
-  const movies = await Movie.find().sort('name');
-  res.send(movies);
-});
+function handleGetById(req, res) {
+  const movie = movies.getMovieById(parseInt(req.params.id));
 
-router.post('/', auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (!movie) {
+    return res.status(404).send('Movie with given id not found.');
+  }
 
-  const genre = await Genre.findById(req.body.genreId);
-  if (!genre) return res.status(400).send('Invalid genre.');
+  res.json(movie);
+}
 
-  const movie = new Movie({
-    title: req.body.title,
-    genre: {
-      _id: genre._id,
-      name: genre.name
-    },
-    numberInStock: req.body.numberInStock,
-    dailyRentalRate: req.body.dailyRentalRate
-  });
-  await movie.save();
+function handleCreate(req, res) {
+  const movie = movies.createMovie(req.body.title, req.body.genre);
 
-  res.send(movie);
-});
+  res.json(movie);
+}
 
-router.put('/:id', [auth, admin], async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+function handleUpdate(req, res) {
+  const movie = movies.updateMovie(
+    parseInt(req.params.id),
+    req.body.title,
+    req.body.genre
+  );
 
-  const genre = await Genre.findById(req.body.genreId);
-  if (!genre) return res.status(400).send('Invalid genre.');
+  if (!movie) {
+    return res.status(404).send('Movie with given id not found.');
+  }
 
-  const movie = await Movie.findByIdAndUpdate(req.params.id,
-    {
-      title: req.body.title,
-      genre: {
-        _id: genre._id,
-        name: genre.name
-      },
-      numberInStock: req.body.numberInStock,
-      dailyRentalRate: req.body.dailyRentalRate
-    }, { new: true });
+  res.json(movie);
+}
 
-  if (!movie) return res.status(404).send('The movie with the given ID was not found.');
+function handleDelete(req, res) {
+  const movie = movies.deleteMovie(parseInt(req.params.id));
 
-  res.send(movie);
-});
+  if (!movie) {
+    return res.status(404).send('Movie with given id not found.');
+  }
 
-router.delete('/:id', [auth, admin], async (req, res) => {
-  const movie = await Movie.findByIdAndRemove(req.params.id);
-
-  if (!movie) return res.status(404).send('The movie with the given ID was not found.');
-
-  res.send(movie);
-});
-
-router.get('/:id', validateObjectId, async (req, res) => {
-  const movie = await Movie.findById(req.params.id);
-
-  if (!movie) return res.status(404).send('The movie with the given ID was not found.');
-
-  res.send(movie);
-});
-
+  res.json(movie);
+}

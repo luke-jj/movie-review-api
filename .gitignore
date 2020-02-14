@@ -2,3 +2,5 @@ node_modules/
 coverage/
 logfile.log
 uncaughtExceptions.log
+.env
+.env.development
