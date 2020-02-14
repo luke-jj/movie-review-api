@@ -3,7 +3,8 @@ const bcrypt = require('bcrypt');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const validate = require('../middleware/validation');
-const { users, generateAuthToken, validate: validateUser } = require('../models/user');
+const { generateAuthToken } = require('../models/user');
+const users = require('../models/user');
 
 const router = express.Router();
 
@@ -12,8 +13,8 @@ module.exports = router;
 router.use(auth, admin);
 router.get('/', handleGet);
 router.get('/:id', handleGetById);
-router.post('/', validate(validateUser), handleCreate);
-router.put('/:id', validate(validateUser), handleUpdate);
+router.post('/', validate(users.schema), handleCreate);
+router.put('/:id', validate(users.schema), handleUpdate);
 router.delete('/:id', handleDelete);
 
 function handleGet(req, res) {

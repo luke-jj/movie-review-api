@@ -1,14 +1,14 @@
 const express = require('express');
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validation');
-const { movies, validate: validateMovie } = require('../models/movie');
+const movies = require('../models/movie');
 
 const router = express.Router();
 
 router.get('/', handleGet);
 router.get('/:id', handleGetById);
-router.post('/', [auth, validate(validateMovie)], handleCreate);
-router.put('/:id', [auth, validate(validateMovie)], handleUpdate);
+router.post('/', [auth, validate(movies.schema)], handleCreate);
+router.put('/:id', [auth, validate(movies.schema)], handleUpdate);
 router.delete('/:id', auth, handleDelete);
 
 module.exports = router;

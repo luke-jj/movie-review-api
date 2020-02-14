@@ -11,14 +11,13 @@
  * @private
  */
 
-const winston = require('winston');
+const Joi = require('@hapi/joi');
 
 /**
  * Module exports.
  * @private
  */
 
-module.exports = (err, req, res, next) => {
-  winston.log('error', err.message, err);
-  res.status(500).send('An unexpected error occured on the server');
+module.exports = () => {
+  Joi.objectId = require('joi-objectid')(Joi);
 };

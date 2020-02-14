@@ -3,13 +3,19 @@ const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
 
 const validate = require('../middleware/validation');
-const { users, generateAuthToken } = require('../models/user');
+const { generateAuthToken } = require('../models/user');
+const users = require('../models/user');
 
 const router = express.Router();
 
+const schema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required()
+});
+
 module.exports = router;
 
-router.post('/', validate(validateAuth), async (req, res) => {
+router.post('/', validate(schema), async (req, res) => {
   const message = 'Email or password invalid.';
   const user = users.getUserByEmail(req.body.email);
 
@@ -27,9 +33,3 @@ router.post('/', validate(validateAuth), async (req, res) => {
   res.send(token);
 });
 
-function validateAuth(body) {
-  return Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(8).required()
-  }).validate(body);
-}

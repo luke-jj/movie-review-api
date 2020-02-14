@@ -9,15 +9,18 @@ const movies =  [
   { id: 5, title: 'Oldboy', genre: 'Drama' }
 ];
 
+const schema = Joi.object({
+  title: Joi.string().min(2).required(),
+  genre: Joi.string().min(3).required()
+});
+
 module.exports = {
-  validate,
-  movies: {
-    getMovies,
-    getMovieById,
-    createMovie,
-    updateMovie,
-    deleteMovie
-  }
+  schema,
+  getMovies,
+  getMovieById,
+  createMovie,
+  updateMovie,
+  deleteMovie
 };
 
 function getMovies() {
@@ -57,11 +60,4 @@ function deleteMovie(id) {
   movies.splice(index, 1);
 
   return movie;
-}
-
-function validate(body) {
-  return Joi.object({
-    title: Joi.string().min(2).required(),
-    genre: Joi.string().min(3).required()
-  }).validate(body);
 }

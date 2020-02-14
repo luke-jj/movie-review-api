@@ -12,17 +12,22 @@ const users = [
   }
 ];
 
+const schema = Joi.object({
+  email: Joi.string().email().required(),
+  name: Joi.string().min(3).required(),
+  password: Joi.string().min(8).required(),
+  isAdmin: Joi.boolean()
+});
+
 module.exports = {
   generateAuthToken,
-  validate,
-  users: {
-    getUsers,
-    getUserById,
-    getUserByEmail,
-    createUser,
-    updateUser,
-    deleteUser
-  }
+  schema,
+  getUsers,
+  getUserById,
+  getUserByEmail,
+  createUser,
+  updateUser,
+  deleteUser
 };
 
 function generateAuthToken(user) {
@@ -85,13 +90,4 @@ function deleteUser(id) {
   users.splice(index, 1);
 
   return user;
-}
-
-function validate(body) {
-  return Joi.object({
-    email: Joi.string().email().required(),
-    name: Joi.string().min(3).required(),
-    password: Joi.string().min(8).required(),
-    isAdmin: Joi.boolean()
-  }).validate(body);
 }
