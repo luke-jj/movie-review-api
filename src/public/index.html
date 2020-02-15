@@ -3,8 +3,47 @@
   <head>
     <meta charset="utf-8">
     <title>API Root Page</title>
+    <style>
+      body {
+        font-family: monospace;
+      }
+    </style>
   </head>
-  <body>
-    <h1>REST API Root Page</h1>
+  <body >
+    <h1>API Root</h1>
+    <p>Endpoint documentation:</p>
+    <pre><code>
+    POST    /api/v1/movies
+    GET     /api/v1/movies
+    GET     /api/v1/movies/{id}
+    PUT     /api/v1/movies/{id}
+    DELETE  /api/v1/movies/{id}
+
+    POST    /api/v1/genres
+    GET     /api/v1/genres
+    GET     /api/v1/genres/{id}
+    PUT     /api/v1/genres/{id}
+    DELETE  /api/v1/genres/{id}
+
+    POST    /api/v1/users
+    GET     /api/v1/users
+    GET     /api/v1/users/{id}
+    PUT     /api/v1/users/{id}
+    DELETE  /api/v1/users/{id}
+    GET     /api/v1/users/me
+
+    POST    /api/v1/auth
+
+    POST    /api/v1/customers
+    GET     /api/v1/customers
+    GET     /api/v1/customers/{id}
+    PUT     /api/v1/customers/{id}
+    DELETE  /api/v1/customers/{id}
+
+    POST    /api/v1/rentals
+    GET     /api/v1/rentals
+
+    POST    /api/v1/returns
+    </code></pre>
   </body>
 </html>

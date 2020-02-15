@@ -14,22 +14,27 @@ make sure all dependencies have been installed correctly.
 
 This API uses a [MongoDB](https://www.mongodb.com/download-center/community)
 database server. You can download, install and run a MongoDB database locally or
-use an online provider. Make sure to set the `video_db` environment
+use an online provider. Make sure to set the `API_DATABASE` environment
 variable to the connection string of the MongoDB server you are using.
 
-The environment variable `video_jwtprivatekey` has to be set to a secure key.
+The environment variable `API_JWTPRIVATEKEY` has to be set to a secure key.
 The secure key has to be 'long and random' and may use any common alphabetic
 characters, numbers, and special symbols. The same recommendations that apply
 for ['strong passwords'](https://www.grc.com/passwords.htm) apply for the
 json webtoken key.
 
-Before starting the application ensure that you have set the necessary
+Before starting the application ensure that you have set the required
 environment variables and your MongoDB server is up:
 
     export NODE_ENV=production
-    export video_jwtPrivateKey=du3hf94j$jd0#jsf.s
-    export video_db=mongodb://mongodb0.example.com:27017/movies?sdf
+    export API_JWTPRIVATEKEY=du3hf94j$jd0#jsf.s
+    export API_DATABASE=mongodb://mongodb0.example.com:27017/movies?sdf
 
+Optional environment variables:
+
+    API_CONFIG_NAME
+    API_LOG_ENABLED
+    API_PORT
 
 ### Populate the Database
 
@@ -47,33 +52,38 @@ Run `npm start` from the project root folder to start the REST API.
 
 ## API Documentation: Endpoints
 
-    POST    /api/customers
-    GET     /api/customers
-    GET     /api/customers/{id}
-    PUT     /api/customers/{id}
-    DELETE  /api/customers/{id}
+    POST    /api/v1/movies
+    GET     /api/v1/movies
+    GET     /api/v1/movies/{id}
+    PUT     /api/v1/movies/{id}
+    DELETE  /api/v1/movies/{id}
 
-    POST    /api/genres
-    GET     /api/genres
-    GET     /api/genres/{id}
-    PUT     /api/genres/{id}
-    DELETE  /api/genres/{id}
+    POST    /api/v1/genres
+    GET     /api/v1/genres
+    GET     /api/v1/genres/{id}
+    PUT     /api/v1/genres/{id}
+    DELETE  /api/v1/genres/{id}
 
-    POST    /api/movies
-    GET     /api/movies
-    GET     /api/movies/{id}
-    PUT     /api/movies/{id}
-    DELETE  /api/movies/{id}
+    POST    /api/v1/users
+    GET     /api/v1/users
+    GET     /api/v1/users/{id}
+    PUT     /api/v1/users/{id}
+    DELETE  /api/v1/users/{id}
+    GET     /api/v1/users/me       get current user's details
 
-    POST    /api/rentals            create a rental / rent a movie
-    GET     /api/rentals
+    POST    /api/v1/auth           login / create JSON web token
 
-    POST    /api/returns            delete a rental / return a rental
+    POST    /api/v1/customers
+    GET     /api/v1/customers
+    GET     /api/v1/customers/{id}
+    PUT     /api/v1/customers/{id}
+    DELETE  /api/v1/customers/{id}
 
-    POST    /api/users              create new user
-    GET     /api/users/me           get current user details
+    POST    /api/v1/rentals        create a rental / rent a movie
+    GET     /api/v1/rentals
 
-    POST    /api/auth               login / create JSON web token
+    POST    /api/v1/returns        delete a rental / return a rental
+
 
 
 ## Headers
