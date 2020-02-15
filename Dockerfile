@@ -15,7 +15,6 @@ ENV API_PORT=$PORT
 
 # 'npm start'
 # ENTRYPOINT ["npm", "start"]
-CMD node src/app.js
-
+CMD npm start
 
 EXPOSE 8080
