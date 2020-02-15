@@ -1,63 +1,64 @@
-const Joi = require('@hapi/joi');
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
 
-const movies =  [
-  { id: 0, title: 'Blade Runner 2049', genre: 'Sci-Fi' },
-  { id: 1, title: 'Wind River', genre: 'Drama' },
-  { id: 2, title: 'The Handmaiden', genre: 'Drama' },
-  { id: 3, title: 'Leon: The Professional', genre: 'Action' },
-  { id: 4, title: 'Kingdom Of Heaven', genre: 'Adventure' },
-  { id: 5, title: 'Oldboy', genre: 'Drama' }
-];
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
+const Joi = require('@hapi/joi');
+Joi.objectId = require('joi-objectid')(Joi);
+const mongoose = require('mongoose');
+const { genreSchema } = require('./genre');
+
+/*
+ * Data schema and model.
+ */
 
 const schema = Joi.object({
-  title: Joi.string().min(2).required(),
-  genre: Joi.string().min(3).required()
+  title: Joi.string().min(5).max(50).required(),
+  genreId: Joi.objectId().required(),
+  numberInStock: Joi.number().min(0).required(),
+  dailyRentalRate: Joi.number().min(0).required()
 });
+
+const Movie = mongoose.model('Movies', new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 5,
+    maxlength: 255
+  },
+  genre: {
+    type: genreSchema,
+    required: true
+  },
+  numberInStock: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 255
+  },
+  dailyRentalRate: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 255
+  }
+}));
+
+/**
+ * Module exports.
+ * @private
+ */
 
 module.exports = {
   schema,
-  getMovies,
-  getMovieById,
-  createMovie,
-  updateMovie,
-  deleteMovie
+  Movie
 };
-
-function getMovies() {
-  return movies;
-}
-
-function getMovieById(id) {
-  return movies.find(movie => movie.id === id);
-}
-
-function createMovie(title, genre) {
-  const movie = {
-    id: movies.length + 1,
-    title,
-    genre
-  };
-
-  movies.push(movie);
-
-  return movie;
-}
-
-function updateMovie(id, title, genre) {
-  const movie = getMovieById(id);
-
-  if (!movie) return null;
-
-  movie.title = title;
-  movie.genre = genre;
-
-  return movie;
-}
-
-function deleteMovie(id) {
-  const movie = getMovieById(id);
-  const index = movies.indexOf(movie);
-  movies.splice(index, 1);
-
-  return movie;
-}

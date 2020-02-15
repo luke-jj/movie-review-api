@@ -1,58 +1,121 @@
+/*
+ * Movie Rental Service
+ * Copyright (c) 2019 Luca J
+ * Licensed under the MIT license.
+ */
+
+'use strict';
+
+/**
+ * Module dependencies.
+ * @private
+ */
+
+const mongoose = require('mongoose');
 const express = require('express');
+const { Movie, schema } = require('../models/movie');
+const { Genre } = require('../models/genre');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const validate = require('../middleware/validation');
-const movies = require('../models/movie');
+const validateObjectId = require("../middleware/validateObjectId");
+
+/**
+ * Module variables.
+ * @private
+ */
 
 const router = express.Router();
 
-router.get('/', handleGet);
-router.get('/:id', handleGetById);
-router.post('/', [auth, validate(movies.schema)], handleCreate);
-router.put('/:id', [auth, validate(movies.schema)], handleUpdate);
-router.delete('/:id', auth, handleDelete);
+/**
+ * Module exports.
+ * @private
+ */
 
 module.exports = router;
 
-function handleGet(req, res) {
-  res.json(movies.getMovies());
+/**
+ * Routes.
+ * @private
+ */
+
+router.get('/', handleGet);
+router.get('/:id', validateObjectId, handleGetById);
+router.post('/', [auth, validate(schema)], handleCreate);
+router.put('/:id', [validateObjectId, auth, validate(schema)], handleUpdate);
+router.delete('/:id', [validateObjectId, auth], handleDelete);
+
+/**
+ * Route controllers.
+ * @private
+ */
+
+async function handleGet(req, res) {
+  const movies = await Movie.find().sort('name');
+  res.send(movies);
 }
 
-function handleGetById(req, res) {
-  const movie = movies.getMovieById(parseInt(req.params.id));
+async function handleGetById(req, res) {
+  const movie = await Movie.findById(req.params.id);
 
   if (!movie) {
     return res.status(404).send('Movie with given id not found.');
   }
 
-  res.json(movie);
+  res.send(movie);
 }
 
-function handleCreate(req, res) {
-  const movie = movies.createMovie(req.body.title, req.body.genre);
+async function handleCreate(req, res) {
+  const genre = await Genre.findById(req.body.genreId);
 
-  res.json(movie);
+  if (!genre) {
+    return res.status(400).send('Invalid genre.');
+  }
+
+  const movie = new Movie({
+    title: req.body.title,
+    genre: {
+      _id: genre._id,
+      name: genre.name
+    },
+    numberInStock: req.body.numberInStock,
+    dailyRentalRate: req.body.dailyRentalRate
+  });
+  await movie.save();
+  res.send(movie);
 }
 
-function handleUpdate(req, res) {
-  const movie = movies.updateMovie(
-    parseInt(req.params.id),
-    req.body.title,
-    req.body.genre
-  );
+async function handleUpdate(req, res) {
+  const genre = await Genre.findById(req.body.genreId);
+
+  if (!genre) {
+    return res.status(400).send('Invalid genre.');
+  }
+
+  const movie = await Movie.findByIdAndUpdate(req.params.id,
+    {
+      title: req.body.title,
+      genre: {
+        _id: genre._id,
+        name: genre.name
+      },
+      numberInStock: req.body.numberInStock,
+      dailyRentalRate: req.body.dailyRentalRate
+    }, { new: true });
 
   if (!movie) {
     return res.status(404).send('Movie with given id not found.');
   }
 
-  res.json(movie);
+  res.send(movie);
 }
 
-function handleDelete(req, res) {
-  const movie = movies.deleteMovie(parseInt(req.params.id));
+async function handleDelete(req, res) {
+  const movie = await Movie.findByIdAndRemove(req.params.id);
 
   if (!movie) {
     return res.status(404).send('Movie with given id not found.');
   }
 
-  res.json(movie);
+  res.send(movie);
 }

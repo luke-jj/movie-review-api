@@ -14,6 +14,8 @@
 const root = require('../routes/root');
 const movies = require('../routes/movies');
 const users = require('../routes/users');
+const customers = require('../routes/customers');
+const genres = require('../routes/genres');
 const auth = require('../routes/auth');
 const error = require('../middleware/error');
 
@@ -30,6 +32,8 @@ module.exports = app => {
   app.use('/', root);
   app.use(`${base}/movies/`, movies);
   app.use(`${base}/users/`, users);
+  app.use(`${base}/customers/`, customers);
+  app.use(`${base}/genres/`, genres);
   app.use(`${base}/auth/`, auth);
   app.use(error);
 };

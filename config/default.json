@@ -1,4 +1,0 @@
-{
-    "jwtPrivateKey": "asdf1234",
-    "db": "mongodb://localhost/movies"
-}
