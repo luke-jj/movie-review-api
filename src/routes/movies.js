@@ -74,10 +74,7 @@ async function handleCreate(req, res) {
 
   const movie = new Movie({
     title: req.body.title,
-    genre: {
-      _id: genre._id,
-      name: genre.name
-    },
+    genre: { _id: genre._id, name: genre.name },
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate
   });
@@ -95,13 +92,11 @@ async function handleUpdate(req, res) {
   const movie = await Movie.findByIdAndUpdate(req.params.id,
     {
       title: req.body.title,
-      genre: {
-        _id: genre._id,
-        name: genre.name
-      },
+      genre: { _id: genre._id, name: genre.name },
       numberInStock: req.body.numberInStock,
       dailyRentalRate: req.body.dailyRentalRate
-    }, { new: true });
+    },
+    { new: true });
 
   if (!movie) {
     return res.status(404).send('Movie with given id not found.');
