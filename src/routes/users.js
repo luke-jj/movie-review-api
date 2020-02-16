@@ -40,11 +40,11 @@ module.exports = router;
  * @private
  */
 
+router.post('/', validate(schema), handleCreate);
 router.use(auth);
 router.get('/me', handleGetMe);
 router.get('/', admin, handleGet);
 router.get('/:id', [admin, validateObjectId], handleGetById);
-router.post('/', [admin, validate(schema)], handleCreate);
 router.put('/:id', [admin, validateObjectId, validate(schema)], handleUpdate);
 router.delete('/:id', [admin, validateObjectId], handleDelete);
 

@@ -27,7 +27,7 @@ Before starting the application ensure that you have set the required
 environment variables and your MongoDB server is up:
 
     export NODE_ENV=production
-    export API_JWTPRIVATEKEY=du3hf94j$jd0#jsf.s
+    export API_JWTPRIVATEKEY=du3hf94jjd0jsf.s
     export API_DATABASE=mongodb://mongodb0.example.com:27017/movies?sdf
 
 Optional environment variables:
@@ -73,6 +73,23 @@ Run `npm start` from the project root folder to start the REST API.
 
     POST    /api/v1/auth           login / create JSON web token
 
+    POST    /api/v1/reviews
+    GET     /api/v1/reviews
+    GET     /api/v1/reviews/{id}
+    PUT     /api/v1/reviews/{id}
+    DELETE  /api/v1/reviews/{id}
+
+    POST    /api/v1/threads
+    GET     /api/v1/threads
+    GET     /api/v1/threads/{id}
+    PUT     /api/v1/threads/{id}
+    DELETE  /api/v1/threads/{id}
+    POST    /api/v1/threads/{id}/posts
+    GET     /api/v1/threads/{id}/posts
+    GET     /api/v1/threads/{id}/posts/{id}
+    PUT     /api/v1/threads/{id}/posts/{id}
+    DELETE  /api/v1/threads/{id}/posts/{id}
+
     POST    /api/v1/customers
     GET     /api/v1/customers
     GET     /api/v1/customers/{id}
@@ -85,9 +102,7 @@ Run `npm start` from the project root folder to start the REST API.
     POST    /api/v1/returns        delete a rental / return a rental
 
 
-
 ## Headers
 On login or registration a json webtoken is sent to the client as a value of
 the header `x-auth-token`. This header and token value has to be sent with
 future api calls to authorize usage of some endpoints.
-
