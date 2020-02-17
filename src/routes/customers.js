@@ -78,12 +78,6 @@ async function handleCreate(req, res) {
 }
 
 async function handleUpdate(req, res) {
-  const { error } = validate(req.body);
-
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
   const customer = await Customer.findByIdAndUpdate(
     req.params.id,
     {
@@ -93,6 +87,10 @@ async function handleUpdate(req, res) {
     },
     { new: true }
   );
+
+  if (!customer) {
+    return res.status(404).send('Customer with given id not found.');
+  }
 
   res.send(customer);
 }

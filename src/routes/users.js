@@ -43,6 +43,7 @@ module.exports = router;
 router.post('/', validate(schema), handleCreate);
 router.use(auth);
 router.get('/me', handleGetMe);
+router.put('/me', validate(schema), handleUpdateMe);
 router.get('/', admin, handleGet);
 router.get('/:id', [admin, validateObjectId], handleGetById);
 router.put('/:id', [admin, validateObjectId, validate(schema)], handleUpdate);
@@ -61,6 +62,11 @@ async function handleGetMe(req, res) {
   res.send(user);
 }
 
+async function handleUpdateMe(req, res) {
+  // TODO: implement
+  res.status(501).send('Not implemented.');
+}
+
 async function handleCreate(req, res) {
   const userExists = await User.findOne({ email: req.body.email });
 
@@ -74,54 +80,52 @@ async function handleCreate(req, res) {
   const token = user.generateAuthToken();
 
   res
-    .header('x-auth-token', token)
-    .header("access-control-expose-headers", "x-auth-token")
+    .header('X-Auth-Token', token)
+    .header("access-control-expose-headers", "X-Auth-Token")
     .send(_.pick(user, ['_id', 'name', 'email']));
 }
 
-
-
 async function handleGet(req, res) {
-  // const usersInDb = users.getUsers();
-  // usersInDb.forEach(user => delete user.password);
-  // res.json(usersInDb);
+  const users = await User.find({}, '-password');
+
+  res.send(users);
 }
 
 async function handleGetById(req, res) {
-  // const user = users.getUserById(parseInt(req.params.id));
+  const user = await User.findById(req.params.id, '-password');
 
-  // if (!user) {
-    // return res.status(404).send('User with given id not found.');
-  // }
+  if (!user) {
+    return res.status(404).send('User with given id not found.');
+  }
 
-  // delete user.password;
-  // res.json(user);
+  res.send(user);
 }
 
 async function handleUpdate(req, res) {
-  // const user = { ...req.body };
 
-  // if (user.password) {
-    // user.password = await bcrypt.hash(user.password, 10);
-  // }
+  if (req.body.password) {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+  }
 
-  // const updatedUser = users.updateUser(parseInt(req.params.id), user);
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
 
-  // if (!updatedUser) {
-    // return res.status(404).send('User with given id not found.');
-  // }
+  if (!user) {
+    return res.status(404).send('Customer with given id not found.');
+  }
 
-  // delete updatedUser.password;
-  // res.json(updatedUser);
+  res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 }
 
 async function handleDelete(req, res) {
-  // const user = users.deleteUser(parseInt(req.params.id));
+  const user = await User.findByIdAndRemove(req.params.id);
 
-  // if (!user) {
-    // return res.status(404).send('User with given id not found.');
-  // }
+  if (!user) {
+    return res.status(404).send('User with given id not found.');
+  }
 
-  // delete user.password;
-  // res.json(user);
+  res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 }
