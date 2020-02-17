@@ -39,11 +39,14 @@ module.exports = router;
  * @private
  */
 
-router.get('/', handleGet);
-router.get('/:id', validateObjectId, handleGetById);
-router.post('/', [auth, admin, validate(schema)], handleCreate);
-router.put('/:id', [auth, admin, validateObjectId, validate(schema)], handleUpdate);
-router.delete('/:id', [auth, admin, validateObjectId], handleDelete);
+router.route('/')
+  .get(handleGet)
+  .post([auth, admin, validate(schema)], handleCreate);
+
+router.route('/:id')
+  .get(validateObjectId, handleGetById)
+  .put([auth, admin, validateObjectId, validate(schema)], handleUpdate)
+  .delete([auth, admin, validateObjectId], handleDelete);
 
 /**
  * Route controllers.

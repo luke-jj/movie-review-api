@@ -38,13 +38,33 @@ module.exports = router;
  * @private
  */
 
-router.use('/:id/posts', validateObjectId, postRouter);
+router.route('/')
+  .get(handleGet)
+  .post([auth, validate(schema)], handleCreate);
 
-router.get('/', handleGet);
-router.get('/:id', validateObjectId, handleGetById);
-router.post('/', [auth, validate(schema)], handleCreate);
-router.put('/:id', [validateObjectId, auth, validate(schema)], handleUpdate);
-router.delete('/:id', [validateObjectId, auth], handleDelete);
+router.route('/:threadId')
+  .all(validateObjectId, getThread)
+  .get(handleGetById)
+  .put([auth, validate(schema)], handleUpdate)
+  .delete(auth, handleDelete);
+
+router.use('/:threadId/posts', [validateObjectId, getThread], postRouter);
+
+/**
+ * Route Middleware
+ * @private
+ */
+
+async function getThread(req, res, next) {
+  const thread = await Thread.findById(req.params.threadId);
+
+  if (!thread) {
+    return res.status(404).send('Thread with given id not found.');
+  }
+
+  req.thread = thread;
+  next();
+}
 
 /**
  * Route controllers.
@@ -57,13 +77,7 @@ async function handleGet(req, res) {
 }
 
 async function handleGetById(req, res) {
-  const thread = await Thread.findById(req.params.id);
-
-  if (!thread) {
-    return res.status(404).send('Review with given id not found.');
-  }
-
-  res.send(thread);
+  res.send(req.thread);
 }
 
 async function handleCreate(req, res) {
@@ -81,38 +95,26 @@ async function handleCreate(req, res) {
 }
 
 async function handleUpdate(req, res) {
-  const thread = await Thread.findById(req.params.id);
-
-  if (!thread) {
-    return res.status(404).send('Thread with given id not found.');
-  }
-
-  if (!req.user.isAdmin && thread.user._id !== req.user._id) {
+  if (!req.user.isAdmin && req.thread.user._id !== req.user._id) {
     return res.status(403).send('Not authorized or not original poster.');
   }
 
-  thread.title = req.body.title;
-  thread.text = req.body.text;
+  req.thread.title = req.body.title;
+  req.thread.text = req.body.text;
 
-  await thread.save();
-  res.send(thread);
+  await req.thread.save();
+  res.send(req.thread);
 }
 
 async function handleDelete(req, res) {
-  const thread = await Thread.findById(req.params.id);
-
-  if (!thread) {
-    return res.status(404).send('Thread with given id not found.');
-  }
-
-  if (!req.user.isAdmin && thread.user._id !== req.user._id) {
+  if (!req.user.isAdmin && req.thread.user._id !== req.user._id) {
     return res.status(403).send('Not authorized or not original poster.');
   }
 
-  const result = await Thread.deleteOne({ _id: thread._id });
+  const result = await Thread.deleteOne({ _id: req.thread._id });
 
   if (result) {
-    return res.send(thread);
+    return res.send(req.thread);
   }
 
   res.status(500).send('Error deleting thread.');

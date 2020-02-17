@@ -14,6 +14,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const { Post, schema } = require('../models/post');
+const { Thread } = require('../models/thread');
 const auth = require('../middleware/auth');
 const validate = require('../middleware/validation');
 const validateObjectId = require('../middleware/validateObjectId');
@@ -37,11 +38,31 @@ module.exports = router;
  * @private
  */
 
-router.get('/', handleGet);
-router.get('/:postid', handleGetById);
-router.post('/', [auth, validate(schema)], handleCreate);
-router.put('/:postid', auth, validate(schema), handleUpdate);
-router.delete('/:postid', auth, handleDelete);
+router.route('/')
+  .get(handleGet)
+  .post([auth, validate(schema)], handleCreate);
+
+router.route('/:postId')
+  .all(validateObjectId, getPost)
+  .get(handleGetById)
+  .put([auth, validate(schema)], handleUpdate)
+  .delete(auth, handleDelete);
+
+/**
+ * Route Middleware
+ * @private
+ */
+
+async function getPost(req, res, next) {
+  const post = await Post.findById(req.params.postId);
+
+  if (!post) {
+    return res.status(404).send('Post with given id not found.');
+  }
+
+  req.post = post;
+  next();
+}
 
 /**
  * Route controllers.
@@ -49,69 +70,49 @@ router.delete('/:postid', auth, handleDelete);
  */
 
 async function handleGet(req, res) {
-  res.send(`hi from posts router. threadid: ${req.params.id}`);
-  // const posts = await Post.find().sort('date');
-  // res.send(posts);
+  const posts = await Post.find({ threadId: req.thread._id });
+
+  res.send(posts);
 }
 
 async function handleGetById(req, res) {
-  // const thread = await Thread.findById(req.params.id);
-
-  // if (!thread) {
-    // return res.status(404).send('Review with given id not found.');
-  // }
-
-  // res.send(thread);
+  res.send(req.post);
 }
 
 async function handleCreate(req, res) {
-  // const thread = new Thread({
-    // title: req.body.title,
-    // text: req.body.text,
-    // repliesCount: 0,
-    // user: {
-      // _id: req.user._id,
-      // name: req.user.name
-    // }
-  // });
-  // await thread.save();
-  // res.send(thread);
+  const post = new Post({
+    threadId: req.thread._id,
+    user: {
+      _id: req.user._id,
+      name: req.user.name
+    },
+    text: req.body.text,
+  });
+  await post.save();
+  res.send(post);
 }
 
 async function handleUpdate(req, res) {
-  // const thread = await Thread.findById(req.params.id);
+  if (!req.user.isAdmin && req.post.user._id !== req.user._id) {
+    return res.status(403).send('Not authorized or not poster.');
+  }
 
-  // if (!thread) {
-    // return res.status(404).send('Thread with given id not found.');
-  // }
+  req.post.text = req.body.text;
 
-  // if (!req.user.isAdmin && thread.user._id !== req.user._id) {
-    // return res.status(403).send('Not authorized or not original poster.');
-  // }
-
-  // thread.title = req.body.title;
-  // thread.text = req.body.text;
-
-  // await thread.save();
-  // res.send(thread);
+  await req.post.save();
+  res.send(req.post);
 }
 
 async function handleDelete(req, res) {
-  // const thread = await Thread.findById(req.params.id);
+  if (!req.user.isAdmin && req.post.user._id !== req.user._id) {
+    return res.status(403).send('Not authorized or not poster.');
+  }
 
-  // if (!thread) {
-    // return res.status(404).send('Thread with given id not found.');
-  // }
+  const result = await Post.deleteOne({ _id: req.post._id });
 
-  // if (!req.user.isAdmin && thread.user._id !== req.user._id) {
-    // return res.status(403).send('Not authorized or not original poster.');
-  // }
+  if (result) {
+    return res.send(req.post);
+  }
 
-  // const result = await Thread.deleteOne({ _id: thread._id });
-
-  // if (result) {
-    // return res.send(thread);
-  // }
-
-  // res.status(500).send('Error deleting thread.');
+  res.status(500).send('Error deleting post.');
 }

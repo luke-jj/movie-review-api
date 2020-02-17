@@ -19,6 +19,10 @@ const schema = Joi.object({
 });
 
 const Post = mongoose.model('Posts', mongoose.Schema({
+  threadId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   user: {
     type: new mongoose.Schema({
       name: {
