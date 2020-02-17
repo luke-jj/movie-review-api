@@ -21,6 +21,12 @@ const config = require('../../config');
  */
 
 module.exports = function() {
-  mongoose.connect(config.DATABASE)
+  const options = {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  };
+
+  mongoose.connect(config.DATABASE, options)
     .then(() => winston.info(`Connected to MongoDB...`));
 };
