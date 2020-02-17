@@ -15,6 +15,7 @@ const root = require('../routes/root');
 const genres = require('../routes/genres');
 const movies = require('../routes/movies');
 const reviews = require('../routes/reviews');
+const threads = require('../routes/threads');
 const users = require('../routes/users');
 const customers = require('../routes/customers');
 const rentals = require('../routes/rentals');
@@ -36,6 +37,7 @@ module.exports = app => {
   app.use(`${base}/genres/`, genres);
   app.use(`${base}/movies/`, movies);
   app.use(`${base}/reviews/`, reviews);
+  app.use(`${base}/threads/`, threads);
   app.use(`${base}/users/`, users);
   app.use(`${base}/customers/`, customers);
   app.use(`${base}/rentals/`, rentals);
