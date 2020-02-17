@@ -70,6 +70,7 @@ Run `npm start` from the project root folder to start the REST API.
     PUT     /api/v1/users/{id}
     DELETE  /api/v1/users/{id}
     GET     /api/v1/users/me       get current user's details
+    PUT     /api/v1/users/me
 
     POST    /api/v1/auth           login / create JSON web token
 
@@ -98,6 +99,7 @@ Run `npm start` from the project root folder to start the REST API.
 
     POST    /api/v1/rentals        create a rental / rent a movie
     GET     /api/v1/rentals
+    GET     /api/v1/rentals/{id}
 
     POST    /api/v1/returns        delete a rental / return a rental
 

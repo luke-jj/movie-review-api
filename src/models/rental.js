@@ -11,13 +11,18 @@
  * @private
  */
 
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
 /*
  * Data schema and model.
  */
+
+const requestSchema = Joi.object({
+  customerId: Joi.objectId().required(),
+  movieId: Joi.objectId().required()
+});
 
 const rentalSchema = new mongoose.Schema({
   customer: {
@@ -88,11 +93,6 @@ rentalSchema.methods.return = function() {
 };
 
 const Rental = mongoose.model('Rental', rentalSchema);
-
-const requestSchema = Joi.object({
-  customerId: Joi.objectId().required(),
-  movieId: Joi.objectId().required()
-});
 
 /**
  * Module exports.
