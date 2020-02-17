@@ -40,11 +40,16 @@ module.exports = router;
  */
 
 router.use(auth, admin);
-router.get('/', handleGet);
-router.get('/:id', validateObjectId, handleGetById);
-router.post('/', validate(schema), handleCreate);
-router.put('/:id', [validateObjectId, validate(schema)], handleUpdate);
-router.delete('/:id', validateObjectId, handleDelete);
+
+router.route('/')
+  .get(handleGet)
+  .post(validate(schema), handleCreate);
+
+router.route('/:id')
+  .all(validateObjectId)
+  .get(handleGetById)
+  .put(validate(schema), handleUpdate)
+  .delete(handleDelete);
 
 /**
  * Route controllers.

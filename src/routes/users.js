@@ -45,9 +45,11 @@ router.use(auth);
 router.get('/me', handleGetMe);
 router.put('/me', validate(schema), handleUpdateMe);
 router.get('/', admin, handleGet);
-router.get('/:id', [admin, validateObjectId], handleGetById);
-router.put('/:id', [admin, validateObjectId, validate(schema)], handleUpdate);
-router.delete('/:id', [admin, validateObjectId], handleDelete);
+router.route('/:id')
+  .all(admin, validateObjectId)
+  .get(handleGetById)
+  .put(validate(schema), handleUpdate)
+  .delete(handleDelete);
 
 /**
  * Route controllers.
