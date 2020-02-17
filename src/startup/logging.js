@@ -14,7 +14,7 @@
 const config = require('../../config');
 const morgan = require('morgan');
 const winston = require('winston');
-// require('winston-mongodb');
+require('winston-mongodb');
 
 /**
  * Module exports.
@@ -40,10 +40,12 @@ module.exports = (app) => {
 
   winston.add(new winston.transports.File({ filename: 'logfile.log' }));
 
-  // winston.add(new winston.transports.MongoDB({
-    // db: 'mongodb://localhost/video',
-    // level: 'error'
-  // }));
+  if (config.ENVIRONMENT === 'production') {
+    winston.add(new winston.transports.MongoDB({
+      db: config.DATABASE,
+      level: 'error'
+    }));
+  }
 
   process.on('uncaughtException', err => {
     winston.log('error', err.message, err);
