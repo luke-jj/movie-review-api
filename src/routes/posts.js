@@ -88,7 +88,20 @@ async function handleCreate(req, res) {
     },
     text: req.body.text,
   });
+
   await post.save();
+  await Thread.updateOne(
+    { _id: req.thread._id },
+    {
+      $inc: { repliesCount: 1 },
+      lastReply: {
+        userId: req.user._id,
+        username: req.user.name,
+        date: Date.now()
+      }
+    }
+  );
+
   res.send(post);
 }
 
@@ -109,6 +122,12 @@ async function handleDelete(req, res) {
   }
 
   const result = await Post.deleteOne({ _id: req.post._id });
+  await Thread.updateOne(
+    { _id: req.thread._id },
+    {
+      $inc: { repliesCount: -1 }
+    }
+  );
 
   if (result) {
     return res.send(req.post);

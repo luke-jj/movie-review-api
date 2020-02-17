@@ -49,6 +49,17 @@ const Thread = mongoose.model('Threads', mongoose.Schema({
     min: 0,
     required: true
   },
+  lastReply: {
+    userId: mongoose.Schema.Types.ObjectId,
+    username: {
+      type: String,
+      minlength: 2,
+      maxlength: 255
+    },
+    date: {
+      type: Date
+    }
+  },
   date: {
     type: Date,
     required: true,
