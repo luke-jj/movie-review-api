@@ -27,7 +27,7 @@ const schema = Joi.object({
   dailyRentalRate: Joi.number().min(0).required()
 });
 
-const Movie = mongoose.model('Movies', new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -51,7 +51,9 @@ const Movie = mongoose.model('Movies', new mongoose.Schema({
     min: 0,
     max: 255
   }
-}));
+});
+
+const Movie = mongoose.model('Movies', movieSchema);
 
 /**
  * Module exports.
@@ -60,5 +62,6 @@ const Movie = mongoose.model('Movies', new mongoose.Schema({
 
 module.exports = {
   schema,
+  movieSchema,
   Movie
 };

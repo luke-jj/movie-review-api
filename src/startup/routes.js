@@ -12,10 +12,11 @@
  */
 
 const root = require('../routes/root');
+const genres = require('../routes/genres');
 const movies = require('../routes/movies');
+const reviews = require('../routes/reviews');
 const users = require('../routes/users');
 const customers = require('../routes/customers');
-const genres = require('../routes/genres');
 const rentals = require('../routes/rentals');
 const returns = require('../routes/returns');
 const auth = require('../routes/auth');
@@ -32,10 +33,11 @@ const base = '/api/v1';
 
 module.exports = app => {
   app.use('/', root);
+  app.use(`${base}/genres/`, genres);
   app.use(`${base}/movies/`, movies);
+  app.use(`${base}/reviews/`, reviews);
   app.use(`${base}/users/`, users);
   app.use(`${base}/customers/`, customers);
-  app.use(`${base}/genres/`, genres);
   app.use(`${base}/rentals/`, rentals);
   app.use(`${base}/returns/`, returns);
   app.use(`${base}/auth/`, auth);

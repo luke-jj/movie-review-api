@@ -14,6 +14,8 @@
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
+const { movieSchema } = require('./movie.js');
+const { genreSchema } = require('./genre.js');
 
 const schema = Joi.object({
   title: Joi.string().min(2).max(255).required(),
@@ -30,11 +32,27 @@ const Review = mongoose.model('Reviews', mongoose.Schema({
     maxlength: 255
   },
   user: {
-    type: userSchema,
+    type: new mongoose.Schema({
+      name: {
+        type: String,
+        required: true,
+        minlength: 2,
+        maxlength: 255
+      },
+    }),
     required: true,
   },
   movie: {
-    type: movieSchema,
+    type: new mongoose.Schema({
+      title: {
+        type: String,
+        required: true
+      },
+      genre: {
+        type: genreSchema,
+        required: true
+      },
+    }),
     required: true,
   },
   text: {

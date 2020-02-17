@@ -28,13 +28,14 @@ const router = express.Router();
 
 /**
  * Module exports.
- * @private
+ * @public
  */
 
 module.exports = router;
 
 /*
- * Returns router and handler
+ * Route handler.
+ * @private
  */
 
 router.post('/', [auth, admin, validate(schema)], async (req, res) => {

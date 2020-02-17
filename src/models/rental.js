@@ -12,6 +12,7 @@
  */
 
 const Joi = require('@hapi/joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 const moment = require('moment');
 
@@ -30,7 +31,7 @@ const rentalSchema = new mongoose.Schema({
       name: {
         type: String,
         required: true,
-        minlength: 5,
+        minlength: 2,
         maxlength: 50
       },
       isGold: {
@@ -52,7 +53,7 @@ const rentalSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 5,
+        minlength: 2,
         maxlength: 255
       },
       dailyRentalRate: {

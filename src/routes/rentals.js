@@ -19,6 +19,7 @@ const { Customer } = require('../models/customer');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const validate = require('../middleware/validation');
+const validateObjectId = require("../middleware/validateObjectId");
 
 /**
  * Module variables.
@@ -29,21 +30,24 @@ const router = express.Router();
 
 /**
  * Module exports.
- * @private
+ * @public
  */
 
 module.exports = router;
 
-/*
- * Rental Routes
+/**
+ * Routes.
+ * @private
  */
 
-router.get('/', [auth, admin], handleGet);
-router.get('/:id', [auth, admin], handleGetById);
-router.post('/', [auth, admin, validate(schema)], handleCreate);
+router.use(auth, admin);
+router.get('/', handleGet);
+router.get('/:id', validateObjectId, handleGetById);
+router.post('/', validate(schema), handleCreate);
 
-/*
- * Rental Controllers
+/**
+ * Route controllers.
+ * @private
  */
 
 async function handleGet(req, res) {

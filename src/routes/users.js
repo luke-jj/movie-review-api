@@ -30,7 +30,7 @@ const router = express.Router();
 
 /**
  * Module exports.
- * @private
+ * @public
  */
 
 module.exports = router;

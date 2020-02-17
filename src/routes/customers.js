@@ -16,6 +16,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { Customer, schema } = require('../models/customer');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const validate = require('../middleware/validation');
 const validateObjectId = require('../middleware/validateObjectId');
 
@@ -28,7 +29,7 @@ const router = express.Router();
 
 /**
  * Module exports.
- * @private
+ * @public
  */
 
 module.exports = router;
@@ -38,11 +39,12 @@ module.exports = router;
  * @private
  */
 
-router.get('/', auth, handleGet);
-router.get('/:id', [validateObjectId, auth], handleGetById);
-router.post('/', [auth, validate(schema)], handleCreate);
-router.put('/:id', [validateObjectId, auth, validate(schema)], handleUpdate);
-router.delete('/:id', [validateObjectId, auth], handleDelete);
+router.use(auth, admin);
+router.get('/', handleGet);
+router.get('/:id', validateObjectId, handleGetById);
+router.post('/', validate(schema), handleCreate);
+router.put('/:id', [validateObjectId, validate(schema)], handleUpdate);
+router.delete('/:id', validateObjectId, handleDelete);
 
 /**
  * Route controllers.
@@ -105,6 +107,8 @@ async function handleDelete(req, res) {
   const result = await Customer.deleteOne({ _id: req.params.id });
 
   if (result) {
-    res.send(customer);
+    return res.send(customer);
   }
+
+  res.status(500).send('Error deleting customer.');
 }

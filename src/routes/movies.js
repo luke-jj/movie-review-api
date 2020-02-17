@@ -29,7 +29,7 @@ const router = express.Router();
 
 /**
  * Module exports.
- * @private
+ * @public
  */
 
 module.exports = router;
@@ -42,8 +42,8 @@ module.exports = router;
 router.get('/', handleGet);
 router.get('/:id', validateObjectId, handleGetById);
 router.post('/', [auth, admin, validate(schema)], handleCreate);
-router.put('/:id', [validateObjectId, auth, admin, validate(schema)], handleUpdate);
-router.delete('/:id', [validateObjectId, auth, admin], handleDelete);
+router.put('/:id', [auth, admin, validateObjectId, validate(schema)], handleUpdate);
+router.delete('/:id', [auth, admin, validateObjectId], handleDelete);
 
 /**
  * Route controllers.
