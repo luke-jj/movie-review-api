@@ -47,7 +47,12 @@ const userSchema = new mongoose.Schema({
     maxlength: 1024
   },
   isAdmin: {
-    type: Boolean
+    type: Boolean,
+    default: false
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now
   }
 });
 

@@ -51,4 +51,7 @@ router.post('/', validate(schema), async (req, res) => {
 
   const token = user.generateAuthToken();
   res.send(token);
+
+  user.lastLogin = Date.now();
+  user.save();
 });
