@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    ".git",
+    ".eslintrc",
+    "node_modules/**",
+    "test/**",
+    "public/**",
+    "*.test.js",
+    "webpack.*.js"
+  ],
+  "watch": ["src/"]
+}

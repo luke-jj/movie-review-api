@@ -40,6 +40,12 @@ module.exports = router;
  * @private
  */
 
+router.route('/me')
+  .all(auth)
+  .get(handleGetMe)
+  .put(validate(schema), handleUpdateMe)
+  .delete(handleDeleteMe);
+
 router.route('/')
   .post(validate(schema), handleCreate)
   .get(auth, admin, handleGet);
@@ -49,12 +55,6 @@ router.route('/:id')
   .get(handleGetById)
   .put(validate(schema), handleUpdate)
   .delete(handleDelete);
-
-router.route('/me')
-  .all(auth)
-  .get(handleGetMe)
-  .put(validate(schema), handleUpdateMe)
-  .delete(handleDeleteMe);
 
 /**
  * Route controllers.
