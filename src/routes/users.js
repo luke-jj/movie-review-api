@@ -41,8 +41,8 @@ module.exports = router;
  */
 
 router.route('/')
-  .post('/', validate(schema), handleCreate)
-  .get('/', auth, admin, handleGet);
+  .post(validate(schema), handleCreate)
+  .get(auth, admin, handleGet);
 
 router.route('/:id')
   .all(auth, admin, validateObjectId)
