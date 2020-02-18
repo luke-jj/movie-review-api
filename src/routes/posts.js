@@ -70,7 +70,7 @@ async function getPost(req, res, next) {
  */
 
 async function handleGet(req, res) {
-  const posts = await Post.find({ threadId: req.thread._id });
+  const posts = await Post.find({ threadId: req.thread._id }).sort({'date': 'asc'});
 
   res.send(posts);
 }

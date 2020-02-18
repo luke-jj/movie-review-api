@@ -16,7 +16,7 @@ const mongoose = require('mongoose');
 
 const schema = Joi.object({
   title: Joi.string().min(2).max(255).required(),
-  text: Joi.string().min(10).max(8192).required(),
+  text: Joi.string().min(16).max(32767).required(),
 });
 
 const Thread = mongoose.model('Threads', mongoose.Schema({
@@ -41,12 +41,13 @@ const Thread = mongoose.model('Threads', mongoose.Schema({
   text: {
     type: String,
     required: true,
-    minlength: 10,
-    maxlength: 8192
+    minlength: 16,
+    maxlength: 32767
   },
   repliesCount: {
     type: Number,
     min: 0,
+    default: 0,
     required: true
   },
   lastReply: {
@@ -57,7 +58,9 @@ const Thread = mongoose.model('Threads', mongoose.Schema({
       maxlength: 255
     },
     date: {
-      type: Date
+      type: Date,
+      default: Date.now,
+      required: true
     }
   },
   date: {

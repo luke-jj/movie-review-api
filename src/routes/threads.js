@@ -72,7 +72,7 @@ async function getThread(req, res, next) {
  */
 
 async function handleGet(req, res) {
-  const threads = await Thread.find().sort('date');
+  const threads = await Thread.find().sort({'lastReply.date': 'desc'});
   res.send(threads);
 }
 
@@ -84,7 +84,6 @@ async function handleCreate(req, res) {
   const thread = new Thread({
     title: req.body.title,
     text: req.body.text,
-    repliesCount: 0,
     user: {
       _id: req.user._id,
       name: req.user.name

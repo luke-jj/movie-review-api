@@ -15,7 +15,7 @@ const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
 
 const schema = Joi.object({
-  text: Joi.string().min(10).max(8192).required(),
+  text: Joi.string().min(1).max(32767).required(),
 });
 
 const Post = mongoose.model('Posts', mongoose.Schema({
@@ -37,8 +37,8 @@ const Post = mongoose.model('Posts', mongoose.Schema({
   text: {
     type: String,
     required: true,
-    minlength: 10,
-    maxlength: 8192
+    minlength: 1,
+    maxlength: 32767
   },
   date: {
     type: Date,
