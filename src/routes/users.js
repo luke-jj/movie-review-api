@@ -40,16 +40,21 @@ module.exports = router;
  * @private
  */
 
-router.post('/', validate(schema), handleCreate);
-router.use(auth);
-router.get('/me', handleGetMe);
-router.put('/me', validate(schema), handleUpdateMe);
-router.get('/', admin, handleGet);
+router.route('/')
+  .post('/', validate(schema), handleCreate)
+  .get('/', auth, admin, handleGet);
+
 router.route('/:id')
-  .all(admin, validateObjectId)
+  .all(auth, admin, validateObjectId)
   .get(handleGetById)
   .put(validate(schema), handleUpdate)
   .delete(handleDelete);
+
+router.route('/me')
+  .all(auth)
+  .get(handleGetMe)
+  .put(validate(schema), handleUpdateMe)
+  .delete(handleDeleteMe);
 
 /**
  * Route controllers.
@@ -65,8 +70,36 @@ async function handleGetMe(req, res) {
 }
 
 async function handleUpdateMe(req, res) {
-  // TODO: implement
-  res.status(501).send('Not implemented.');
+
+  if (req.body.password) {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password
+    },
+    { new: true }
+  );
+
+  if (!user) {
+    return res.status(404).send('Something went wrong.');
+  }
+
+  res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
+}
+
+async function handleDeleteMe(req, res) {
+  const user = await User.findByIdAndRemove(req.user._id);
+
+  if (!user) {
+    return res.status(500).send('Something went wrong.');
+  }
+
+  res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 }
 
 async function handleCreate(req, res) {
