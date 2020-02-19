@@ -51,7 +51,7 @@ router.delete('/:id', [validateObjectId, auth], handleDelete);
  */
 
 async function handleGet(req, res) {
-  const reviews = await Review.find().sort('date');
+  const reviews = await Review.find().sort({'date': 'desc'});
   res.send(reviews);
 }
 
