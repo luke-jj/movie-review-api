@@ -23,6 +23,8 @@ const { genreSchema } = require('./genre');
 const schema = Joi.object({
   title: Joi.string().min(2).max(255).required(),
   genreId: Joi.objectId().required(),
+  imgUrl: Joi.string(),
+  year: Joi.number().min(1800).max(2100).required(),
   numberInStock: Joi.number().min(0).required(),
   dailyRentalRate: Joi.number().min(0).required()
 });
@@ -38,6 +40,15 @@ const movieSchema = new mongoose.Schema({
   genre: {
     type: genreSchema,
     required: true
+  },
+  imgUrl: {
+    type: String
+  },
+  year: {
+    type: Number,
+    required: true,
+    min: 1800,
+    max: 2100
   },
   numberInStock: {
     type: Number,

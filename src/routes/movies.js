@@ -78,6 +78,8 @@ async function handleCreate(req, res) {
   const movie = new Movie({
     title: req.body.title,
     genre: { _id: genre._id, name: genre.name },
+    imgUrl: req.body.imgUrl,
+    year: req.body.year,
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate
   });
@@ -96,6 +98,8 @@ async function handleUpdate(req, res) {
     {
       title: req.body.title,
       genre: { _id: genre._id, name: genre.name },
+      imgUrl: req.body.imgUrl,
+      year: req.body.year,
       numberInStock: req.body.numberInStock,
       dailyRentalRate: req.body.dailyRentalRate
     },
