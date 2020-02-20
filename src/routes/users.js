@@ -16,10 +16,12 @@ const mongoose = require('mongoose');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const { User, schema } = require('../models/user');
+const { Bookmarks } = require('../models/bookmarks');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const validate = require('../middleware/validation');
 const validateObjectId = require("../middleware/validateObjectId");
+const bookmarkRouter = require('./bookmarks');
 
 /**
  * Module variables.
@@ -39,6 +41,8 @@ module.exports = router;
  * Routes.
  * @private
  */
+
+router.use('/me/bookmarks', bookmarkRouter);
 
 router.route('/me')
   .all(auth)
@@ -99,6 +103,8 @@ async function handleDeleteMe(req, res) {
     return res.status(500).send('Something went wrong.');
   }
 
+  await Bookmarks.deleteOne({ "user._id": req.user._id });
+
   res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 }
 
@@ -112,6 +118,16 @@ async function handleCreate(req, res) {
   const user = new User(_.pick(req.body, ['name', 'email', 'password']));
   user.password = await bcrypt.hash(req.body.password, 10);
   await user.save();
+
+  const bookmarks = new Bookmarks({
+    user: {
+      _id: user._id,
+      name: user.name
+    },
+    movies: []
+  });
+
+  await bookmarks.save();
   const token = user.generateAuthToken();
 
   res
@@ -161,6 +177,8 @@ async function handleDelete(req, res) {
   if (!user) {
     return res.status(404).send('User with given id not found.');
   }
+
+  await Bookmarks.deleteOne({ "user._id": req.params.id });
 
   res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']));
 }
