@@ -69,11 +69,14 @@ Run `npm start` from the project root folder to start the REST API.
     GET     /api/v1/users/{id}
     PUT     /api/v1/users/{id}
     DELETE  /api/v1/users/{id}
-    GET     /api/v1/users/me       get current user's details
+    GET     /api/v1/users/me                get current user's details
     PUT     /api/v1/users/me
     DELETE  /api/v1/users/me
+    GET     /api/v1/users/me/bookmarks
+    POST    /api/v1/users/me/bookmarks      create a bookmark
+    DELETE  /api/v1/users/me/bookmarks/{id}
 
-    POST    /api/v1/auth           login / create JSON web token
+    POST    /api/v1/auth                    login / create JSON web token
 
     POST    /api/v1/reviews
     GET     /api/v1/reviews
@@ -98,11 +101,11 @@ Run `npm start` from the project root folder to start the REST API.
     PUT     /api/v1/customers/{id}
     DELETE  /api/v1/customers/{id}
 
-    POST    /api/v1/rentals        create a rental / rent a movie
+    POST    /api/v1/rentals                 rent a movie
     GET     /api/v1/rentals
     GET     /api/v1/rentals/{id}
 
-    POST    /api/v1/returns        delete a rental / return a rental
+    POST    /api/v1/returns                 return a rental
 
 
 ## Headers
