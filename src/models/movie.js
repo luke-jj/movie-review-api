@@ -22,9 +22,15 @@ const { genreSchema } = require('./genre');
 
 const schema = Joi.object({
   title: Joi.string().min(2).max(255).required(),
+  tagline: Joi.string().min(2).max(2047).required(),
+  description: Joi.string().min(2).max(32767).required(),
+  rating: Joi.number().min(0).max(10),
+  imdbId: Joi.string(),
   genreId: Joi.objectId().required(),
-  imgUrl: Joi.string(),
-  year: Joi.number().min(1800).max(2100).required(),
+  posterUrl: Joi.string(),
+  posterPath: Joi.string(),
+  backdropPath: Joi.string(),
+  releaseDate: Joi.string().required(), // TODO: validate with reg ex
   numberInStock: Joi.number().min(0).required(),
   dailyRentalRate: Joi.number().min(0).required()
 });
@@ -37,31 +43,67 @@ const movieSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 255
   },
-  genre: {
-    type: genreSchema,
-    required: true
+  tagline: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 2047,
   },
-  imgUrl: {
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2,
+    maxlength: 32767,
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 10,
+  },
+  imdbId: {
     type: String
   },
-  year: {
-    type: Number,
+  genre: {
+    type: genreSchema,
     required: true,
-    min: 1800,
-    max: 2100
+  },
+  posterUrl: {
+    type: String,
+  },
+  posterPath: {
+    type: String,
+  },
+  backdropPath: {
+    type: String,
+  },
+  releaseDate: {
+    type: String,
+    required: true,
   },
   numberInStock: {
     type: Number,
     required: true,
     min: 0,
-    max: 255
+    max: 255,
   },
   dailyRentalRate: {
     type: Number,
     required: true,
     min: 0,
-    max: 255
-  }
+    max: 255,
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
+  lastModified: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
 });
 
 const Movie = mongoose.model('Movies', movieSchema);

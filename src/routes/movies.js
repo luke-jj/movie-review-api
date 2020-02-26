@@ -77,9 +77,15 @@ async function handleCreate(req, res) {
 
   const movie = new Movie({
     title: req.body.title,
+    tagline: req.body.tagline,
+    description: req.body.description,
+    rating: req.body.rating,
+    imdbId: req.body.imdbId,
     genre: { _id: genre._id, name: genre.name },
-    imgUrl: req.body.imgUrl,
-    year: req.body.year,
+    posterUrl: req.body.posterUrl,
+    posterPath: req.body.posterPath,
+    backdropPath: req.body.backdropPath,
+    releaseDate: req.body.releaseDate,
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate
   });
@@ -97,9 +103,15 @@ async function handleUpdate(req, res) {
   const movie = await Movie.findByIdAndUpdate(req.params.id,
     {
       title: req.body.title,
+      tagline: req.body.tagline,
+      description: req.body.description,
+      rating: req.body.rating,
+      imdbId: req.body.imdbId,
       genre: { _id: genre._id, name: genre.name },
-      imgUrl: req.body.imgUrl,
-      year: req.body.year,
+      posterUrl: req.body.posterUrl,
+      posterPath: req.body.posterPath,
+      backdropPath: req.body.backdropPath,
+      releaseDate: req.body.releaseDate,
       numberInStock: req.body.numberInStock,
       dailyRentalRate: req.body.dailyRentalRate
     },

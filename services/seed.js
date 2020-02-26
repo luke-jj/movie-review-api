@@ -13,10 +13,14 @@ const data = [
     movies: [
       {
         title: "Kiss Kiss Bang Bang",
-        imgUrl: "https://m.media-amazon.com/images/M/MV5BMTY5NDExMDA3M15BMl5BanBnXkFtZTYwNTc2MzA3._V1_UX182_CR0,0,182,268_AL_.jpg",
-        year: 2005,
+        tagline: "",
+        description: "",
+        posterUrl: "https://m.media-amazon.com/images/M/MV5BMTY5NDExMDA3M15BMl5BanBnXkFtZTYwNTc2MzA3._V1_UX182_CR0,0,182,268_AL_.jpg",
+        posterPath: "",
+        backdropPath: "",
+        releaseDate: "2005-xx-xx",
         numberInStock: 5,
-        dailyRentalRate: 2
+        dailyRentalRate: 2,
       },
       {
         title: "The Hangover",
