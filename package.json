@@ -1,7 +1,7 @@
 {
   "name": "movie_review_rental_service_api",
   "version": "0.2.0",
-  "description": "",
+  "description": "Express.js REST API for a movie database with review and rental services.",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
@@ -10,9 +10,25 @@
   "engines": {
     "node": "12.15.0"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "movie",
+    "movies",
+    "theather",
+    "cinema",
+    "movie review",
+    "themoviedb.org"
+  ],
+  "author": "Luca Joos",
+  "homepage": "https://moviedb.lucajoos.com",
   "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luke-jj/movie-review-api"
+  },
+  "bugs": {
+    "url": "https://github.com/luke-jj/movie-review-api/issues"
+  },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
     "bcrypt": "^3.0.8",
